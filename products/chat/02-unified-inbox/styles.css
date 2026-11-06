@@ -105,3 +105,7 @@
   .xch02-conv__stream { padding-block: var(--space-2); }
   .xch02-done__toggle { padding-inline: var(--space-4); }
 }
+@media (max-width: 760px) {
+  .xch02-composer .ds-toolbar__start .ds-btn { min-width: var(--hit-min); }
+  .xch02-root .ds-reaction { min-height: 32px; }
+}

@@ -6,7 +6,7 @@
 
 **Reference:** none. Named category only ("a Slack alternative"); structure comes from the team chat archetype in `translate-a-product.md`. No identity taken. Device assumed: both, desktop first.
 
-**Mode:** VARIANT of the team chat archetype. One axis changed: the main object is an inbox item instead of a channel. No `00-parity` layout exists yet, because the brief asked for this layout only, so must-keeps come from the archetype row.
+**Mode:** VARIANT of the team chat archetype. One axis changed: the main object is an inbox item instead of a channel. Built before `00-parity-channel`, which now holds the baseline; both use the same people and messages, and must-keeps come from the archetype row.
 
 **Shape:** AppShell with a workspace switcher and Night rail, Paper triage list in main, Paper conversation (thread, channel, details, composer) in the aside. At 1100px and below the conversation opens as a sheet.
 
