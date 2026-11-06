@@ -1,114 +1,84 @@
-// The front door: what Astodesign is, and the idea behind each thing built with it.
+// The way in: what this is, how to get it, and every screen it produced.
+import { useCallback, useState } from 'react';
 import { createRoot } from 'react-dom/client';
-import { Scene, Nav, Button, Surface, Tag } from '../design-system/components';
+import { Button, Modal, Tag } from '../design-system/components';
+import { MESSAGING, READER, OTHERS } from './data';
+import type { Screen } from './data';
+import { THUMBS } from './thumbs';
 import './styles.css';
 
-const WORK = [
-  { n: '01', href: './products/chat/00-parity-channel/', kind: 'Team chat, the familiar version', name: 'Parity channel', question: 'Can the style carry a real product without changing how it works?', concept: 'A normal channel-first chat: pick a channel, read, open a thread, reply. It is the control in the experiment. Only the skin changes, so anyone who has used a team chat already knows their way around.' },
-  { n: '02', href: './products/chat/02-unified-inbox/', kind: 'Team chat, the new idea', name: 'Unified inbox', question: 'What if you stopped checking channels, and the work came to you?', concept: 'The same people and messages as Parity channel, reorganised around one question: what needs me? Everything lands in one list, sorted into Needs you, Threads that moved and Catch up. Reply, and the item is done.' },
-  { n: '03', href: './products/habits/01-week-ledger/', kind: 'Habit tracker', name: 'Week ledger', question: 'Does the language hold for something that is not chat?', concept: 'A week set out like a paper ledger: habits are rows, days are columns, today is gold. It swaps streak counters for a week total against a target, so a missed day costs less.' },
-  { n: '04', href: './products/reader/03-stats-first/', kind: 'Reader profile', name: 'Stats first', question: 'What if a reader’s profile led with the year in numbers?', concept: 'A book lover’s profile turned upside down: the challenge ring and charts come first, with reading now, shelves and reviews underneath. Finish a book and the ring, charts and shelf counts all move with it.' },
-];
-const OPTION = { n: '05', href: './products/reader/03-start-reading/', kind: 'Reader profile, second option', name: 'Start reading', question: 'What if a reader’s home opened on a book they have not read yet?', concept: 'A profile led by a powerful quote from a book picked for you, with its cover, why it was chosen, and buttons to keep reading or save it. Reading now, shelves, a small challenge and reviews stay quieter below.' };
-const IDEAS = [
-  ['chat/03-decision-ledger', 'Team chat', 'Decision ledger', 'Every channel opens on what was decided and what is still open; the talk is the evidence.'],
-  ['chat/04-morning-paper', 'Team chat', 'Morning paper', 'The workspace arrives as a morning edition: headlines first, replies on every story.'],
-  ['chat/05-people-first', 'Team chat', 'People first', 'You go to a person, not a channel, and see everything you share with them.'],
-  ['chat/06-day-river', 'Team chat', 'Day river', 'The day is a timeline: conversations sit at the hour they happened, with now marked.'],
-  ['reader/04-year-as-book', 'Reader profile', 'The year as a book', 'The profile is an open book: a year of reading told spread by spread.'],
-  ['reader/05-cover-wall', 'Reader profile', 'Cover wall', 'A wall of covers grouped by shelf, with reading now on top.'],
-  ['reader/06-reading-diary', 'Reader profile', 'Reading diary', 'A year as a dated diary: what you read, when, and what you thought.'],
-  ['reader/07-taste-map', 'Reader profile', 'Taste map', 'Every book placed by length and rating, so your taste shows as a pattern.'],
-];
-const JOBS = [
-  { cls: 'is-gold', name: 'Gold', job: 'Where you are, and progress toward a goal' },
-  { cls: 'is-lacquer', name: 'Lacquer', job: 'Selected, mentioned or done' },
-  { cls: 'is-sakura', name: 'Sakura', job: 'Unread, new or happening now' },
-];
+const REPO = 'https://github.com/abhinavsingh1128-maker/astodesign-repo';
+const thumb = (s: Screen) => THUMBS[s.path.replace('/', '-')];
 
 function Landing() {
+  const [open, setOpen] = useState<Screen | null>(null);
+  const close = useCallback(() => setOpen(null), []);
+  const tile = (s: Screen) => (
+    <li key={s.path}>
+      <button type="button" className="xlan-tile" aria-label={`About ${s.name}`} onClick={() => setOpen(s)}>
+        <span className="xlan-tile__img"><img src={thumb(s)} alt="" loading="lazy" /></span>
+        <span className="xlan-tile__text"><span className="xlan-tile__name">{s.name}{s.pick && <Tag variant="accent">My pick</Tag>}</span><span className="xlan-tile__line">{s.line}</span></span>
+      </button>
+    </li>
+  );
   return (
-    <>
-      <Scene quiet height="min(100svh, 760px)" nav={<Nav brand="Astodesign" items={[{ label: 'The idea', href: '#idea' }, { label: 'Screens', href: '#screens' }, { label: 'Second option', href: '#option' }, { label: 'More ideas', href: '#ideas' }, { label: 'Gallery', href: './design-system/gallery/' }]} />}>
-        <div className="xlan-hero">
-          <p className="ds-kicker">A design system and its screens</p>
-          <h1 className="ds-display-xl">One language, tested on real products</h1>
-          <p className="ds-tagline">Night teal, washi paper, and the quiet of a pond after dark.</p>
-          <Button variant="primary" href="#screens">See the screens</Button>
-        </div>
-      </Scene>
+    <div className="xlan-root">
+      <header className="xlan-hero ds-washi" data-surface="paper">
+        <h1 className="ds-display-l">I taught Claude to design the way my portfolio looks</h1>
+        <p className="ds-tagline">Then I asked it to build two products I never designed for.</p>
+        <p className="xlan-by">A design assignment for Pazcare, by Abhinav Singh Tomar</p>
+      </header>
 
-      <Surface tone="paper" as="section" id="idea" className="xlan-band">
-        <div className="ds-container xlan-idea">
-          <div className="xlan-idea__lead">
-            <p className="ds-kicker">The idea</p>
-            <h2 className="ds-h2">A theme, not a product</h2>
-            <p className="ds-body-l">Astodesign turns the look of a portfolio into a system any product can wear. A chat app still has to work like a chat app. So the structure stays true to the product, the skin comes from the system, and each build shows where that holds up.</p>
+      <section className="xlan-idea ds-washi" data-surface="paper" aria-label="The idea">
+        <div className="xlan-idea__grid">
+          <div className="xlan-idea__copy">
+            <h2 className="ds-h2">It’s a look, not a product</h2>
+            <p>My portfolio has a mood: night teal, handmade paper, a serif that feels written by someone. I pulled that out into a design system and wrote it down as a Claude skill, so an agent can use it on something it has never seen.</p>
+            <p>The rule I kept coming back to: a chat app still has to work like a chat app. The structure comes from the product, and only the feel comes from me. Each screen below is a test of where that holds up, and where it doesn’t.</p>
           </div>
-          <dl className="xlan-rules">
-            <div><dt className="ds-h4">Two surfaces</dt><dd>Night for what you scan: shells, rails, navigation. Paper for what you read or write.</dd></div>
-            <div><dt className="ds-h4">Two voices</dt><dd>A serif for titles and names. A plain sans for everything read in bulk.</dd></div>
-            <div><dt className="ds-h4">Colour has a job</dt><dd>
-              <ul className="xlan-jobs">{JOBS.map((j) => <li key={j.name}><span className={`xlan-dot ds-grain ${j.cls}`} aria-hidden="true" /><span><strong>{j.name}:</strong> {j.job}</span></li>)}</ul>
-            </dd></div>
-          </dl>
-        </div>
-      </Surface>
-
-      <Surface tone="night" as="section" id="screens" className="xlan-band" backdrop>
-        <div className="ds-container">
-          <header className="xlan-head">
-            <p className="ds-kicker">Screens</p>
-            <h2 className="ds-h2">Four screens, four questions</h2>
-          </header>
-          <ul className="xlan-work">
-            {WORK.map((w) => (
-              <li key={w.n}>
-                <a className="xlan-item ds-washi" href={w.href} data-surface="paper">
-                  <span className="xlan-item__n" aria-hidden="true">{w.n}</span>
-                  <span className="xlan-item__main">
-                    <Tag>{w.kind}</Tag>
-                    <span className="ds-h3 xlan-item__name">{w.name}</span>
-                    <span className="xlan-item__q">{w.question}</span>
-                    <span className="xlan-item__c">{w.concept}</span>
-                  </span>
-                  <span className="xlan-item__go">Open →</span>
-                </a>
-              </li>
-            ))}
-          </ul>
-          <section id="option" className="xlan-option" aria-labelledby="xlan-option-title">
-            <header className="xlan-head">
-              <p className="ds-kicker">Second option</p>
-              <h2 className="ds-h2" id="xlan-option-title">Another way into the reader</h2>
-            </header>
-            <a className="xlan-item ds-washi" href={OPTION.href} data-surface="paper">
-              <span className="xlan-item__n" aria-hidden="true">{OPTION.n}</span>
-              <span className="xlan-item__main">
-                <Tag>{OPTION.kind}</Tag>
-                <span className="ds-h3 xlan-item__name">{OPTION.name}</span>
-                <span className="xlan-item__q">{OPTION.question}</span>
-                <span className="xlan-item__c">{OPTION.concept}</span>
-              </span>
-              <span className="xlan-item__go">Open →</span>
-            </a>
-          </section>
-          <section id="ideas" className="xlan-option" aria-labelledby="xlan-ideas-title">
-            <header className="xlan-head">
-              <p className="ds-kicker">More ideas</p>
-              <h2 className="ds-h2" id="xlan-ideas-title">Eight more starting points</h2>
-            </header>
-            <ul className="xlan-ideas">
-              {IDEAS.map(([path, kind, name, idea]) => (
-                <li key={path}><a className="xlan-idea-card ds-washi" data-surface="paper" href={`./products/${path}/`}><Tag>{kind}</Tag><span className="ds-h3">{name}</span><span className="xlan-item__c">{idea}</span><span className="xlan-item__go">Open →</span></a></li>
-              ))}
+          <div className="xlan-get">
+            <ul className="xlan-links">
+              <li><a href={`${REPO}/tree/main/skills/astodesign`}>Read the skill</a></li>
+              <li><a href={`${REPO}/tree/main/design-system`}>See the design system</a></li>
+              <li><a href={REPO}>Open the repository</a></li>
             </ul>
-          </section>
-          <p className="xlan-gallery">Want the parts? <a href="./design-system/gallery/">The design system gallery</a> shows every colour, typeface and component these are built from.</p>
-          <p className="ds-caption xlan-foot">By Abhinav Singh Tomar. These are working prototypes with made-up content: nothing is saved or sent.</p>
+            <div className="xlan-zip ds-washi" data-surface="night">
+              <p>Prefer everything in one file? This is all the code. The history and screenshots are in the repository.</p>
+              <Button variant="secondary" href="./astodesign-project.zip">Download the zip</Button>
+            </div>
+          </div>
         </div>
-      </Surface>
-    </>
+      </section>
+
+      <section className="xlan-band ds-washi" data-surface="night" aria-labelledby="xlan-m">
+        <h2 className="ds-h2" id="xlan-m">A messaging app</h2>
+        <p className="xlan-band__sub">Three ideas about what a team chat is really for. Pick one to see the thinking.</p>
+        <ul className="xlan-tiles">{MESSAGING.map(tile)}</ul>
+      </section>
+
+      <section className="xlan-band ds-washi" data-surface="night" aria-labelledby="xlan-r">
+        <h2 className="ds-h2" id="xlan-r">A reader’s profile</h2>
+        <p className="xlan-band__sub">In the spirit of Goodreads: three ideas about what a profile should say about someone.</p>
+        <ul className="xlan-tiles">{READER.map(tile)}</ul>
+      </section>
+
+      <section className="xlan-band xlan-band--paper ds-washi" data-surface="paper" aria-labelledby="xlan-o">
+        <h2 className="ds-h2" id="xlan-o">Other tests</h2>
+        <p className="xlan-band__sub">Everything else I tried along the way. Some of these fed the final six, and some just didn’t work out.</p>
+        <ul className="xlan-tiles xlan-tiles--row" tabIndex={0} aria-label="Other tests, scrolls sideways">{OTHERS.map(tile)}</ul>
+      </section>
+
+      <Modal open={!!open} onClose={close} variant="sheet" title={open?.name}>
+        {open && <>
+          <p className="ds-tagline xlan-panel__line">{open.line}</p>
+          {open.notes.map((n) => <p key={n} className="xlan-panel__note">{n}</p>)}
+          <div className="xlan-wire" role="img" aria-label={`Wireframe of ${open.name}: ${open.wire.flat().join(', ')}`}>
+            {open.wire.map((col, i) => <div key={i} className="xlan-wire__col">{col.map((b) => <span key={b} className="xlan-wire__box">{b}</span>)}</div>)}
+          </div>
+          <Button variant="primary" href={`./products/${open.path}/`}>Open the layout</Button>
+        </>}
+      </Modal>
+    </div>
   );
 }
 createRoot(document.getElementById('root')!).render(<Landing />);
