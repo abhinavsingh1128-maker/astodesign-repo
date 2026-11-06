@@ -1,0 +1,17 @@
+/* Chat 03: decision ledger. Prefix .xch03-, tokens only. */
+.xch03-main { display: flex; flex-direction: column; gap: var(--space-8); padding: var(--space-6); }
+.xch03-n { font-family: var(--font-sans); font-size: var(--type-body-s-size); font-weight: 400; color: var(--text-muted); }
+.xch03-list { list-style: none; margin: var(--space-3) 0 0; padding: 0; }
+.xch03-row { box-shadow: inset 0 -1px 0 var(--border-subtle); }
+.xch03-row.is-current { background: color-mix(in srgb, var(--accent-gold) 12%, transparent); box-shadow: inset 3px 0 0 var(--accent-gold), inset 0 -1px 0 var(--border-subtle); }
+.xch03-row__open { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-1); width: 100%; padding: var(--space-3) var(--space-3); border: 0; background: none; color: inherit; text-align: left; }
+.xch03-row__q { font-family: var(--font-serif); font-size: var(--type-heading-4-size); font-weight: 600; line-height: 1.2; }
+.xch03-row__a, .xch03-row__meta { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); font-size: var(--type-body-m-size); color: var(--text-secondary); }
+.xch03-talk { display: flex; flex-direction: column; flex: 1; height: 100%; min-height: 0; }
+.xch03-talk__head { flex: none; display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-2); padding: var(--space-4); box-shadow: inset 0 -1px 0 var(--border-subtle); }
+.xch03-talk__a { font-size: var(--type-body-m-size); }
+.xch03-talk__stream { flex: 1; min-height: 0; overflow-y: auto; }
+.xch03-root .ds-sheet { padding: 0; gap: 0; overflow: hidden; }
+.xch03-root .ds-sheet .ds-modal__head { padding: var(--space-4) var(--space-4) 0; flex: none; }
+.xch03-root .ds-sheet .xck-composer { margin: 0; }
+@media (max-width: 760px) { .xch03-main { padding: var(--space-4); } }
