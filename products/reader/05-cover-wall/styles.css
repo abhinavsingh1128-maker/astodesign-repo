@@ -1,0 +1,26 @@
+/* Reader 05: cover wall. Prefix .xre05-, tokens only. */
+.xre05-me { display: flex; align-items: center; gap: var(--space-3); }
+.xre05-name { font-family: var(--font-serif); font-size: var(--type-heading-4-size); font-weight: 600; line-height: 1.2; }
+.xre05-chal { display: flex; align-items: center; gap: var(--space-3); }
+.xre05-chal__n { font-family: var(--font-serif); font-size: var(--type-heading-4-size); font-weight: 700; }
+.xre05-search { flex: 0 1 240px; }
+.xre05-wall { display: flex; flex-direction: column; gap: var(--space-6); padding: var(--space-6); }
+.xre05-now ul { list-style: none; margin: var(--space-2) 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: var(--space-4); }
+.xre05-now li { width: 120px; display: flex; flex-direction: column; gap: var(--space-2); }
+.xre05-shelf { margin-bottom: var(--space-3); }
+.xre05-covers { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, 120px); justify-content: space-between; gap: var(--space-4); }
+.xre05-detail { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-2); padding: var(--space-5); }
+.xre05-detail > :first-child { align-self: center; margin-bottom: var(--space-2); }
+.xre05-detail .ds-progress { width: 100%; }
+.xre05-review { font-size: var(--type-body-m-size); line-height: var(--type-body-m-line); }
+.xre05-revs { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--space-4); }
+.xre05-revs li { display: flex; gap: var(--space-4); }
+.xre05-revs li > div { flex: 1; min-width: 0; padding: var(--space-4); border-radius: var(--radius-md); background-color: var(--bg-surface); color: var(--text-primary); }
+.xre05-root .ds-sheet { padding: var(--space-4); }
+.xre05-root .ds-sheet .xre05-detail { padding: 0; }
+@media (max-width: 760px) {
+  .xre05-root .ds-app__sidebar:not([data-open="true"]) { box-shadow: none; }
+  .xre05-wall { padding: var(--space-4); }
+  .xre05-search { flex: 1 1 100%; order: 3; }
+  .xre05-revs li { flex-direction: column; }
+}
