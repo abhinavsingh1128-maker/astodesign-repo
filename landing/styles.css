@@ -1,0 +1,39 @@
+/* Landing page. Prefix .xlan-, tokens only. */
+.xlan-hero { display: flex; flex-direction: column; align-items: center; gap: var(--space-4); max-width: 760px; margin-inline: auto; text-align: center; }
+.xlan-band { padding-block: var(--space-16); scroll-margin-top: var(--space-4); }
+.xlan-idea { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: var(--space-12); }
+.xlan-idea__lead { display: flex; flex-direction: column; gap: var(--space-3); }
+.xlan-idea__lead .ds-body-l { max-width: var(--reading-max); color: var(--text-secondary); }
+.xlan-rules { display: flex; flex-direction: column; gap: var(--space-5); margin: 0; }
+.xlan-rules dd { margin: var(--space-1) 0 0; font-size: var(--type-body-m-size); color: var(--text-secondary); }
+.xlan-jobs { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--space-2); }
+.xlan-jobs li { display: flex; align-items: baseline; gap: var(--space-2); }
+.xlan-jobs strong { color: var(--text-primary); }
+.xlan-dot { flex: none; width: 10px; height: 10px; border-radius: var(--radius-full); }
+.xlan-dot.is-gold { background-color: var(--accent-gold); }
+.xlan-dot.is-lacquer { background-color: var(--accent-lacquer); }
+.xlan-dot.is-sakura { background-color: var(--accent-sakura); }
+.xlan-head { display: flex; flex-direction: column; gap: var(--space-2); margin-bottom: var(--space-8); }
+.xlan-work { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--space-4); }
+.xlan-item { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: var(--space-6); align-items: start; padding: var(--space-6); border-radius: var(--radius-md); background-color: var(--bg-surface); color: var(--text-primary); text-decoration: none; transition: transform var(--duration-base) var(--easing-settle), box-shadow var(--duration-base) var(--easing-settle); }
+.xlan-item:hover { transform: translateY(-3px); box-shadow: var(--elevation-2); }
+.xlan-item__n { font-family: var(--font-serif); font-size: var(--type-heading-3-size); line-height: 1.2; color: var(--text-accent); font-variant-numeric: tabular-nums; }
+.xlan-item__main { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-2); }
+.xlan-item__name { display: block; }
+.xlan-item__q { font-family: var(--font-serif); font-style: italic; font-size: var(--type-heading-4-size); line-height: 1.25; }
+.xlan-item__c { max-width: var(--reading-max); font-size: var(--type-body-m-size); line-height: var(--type-body-m-line); color: var(--text-secondary); }
+.xlan-item__go { align-self: center; white-space: nowrap; font-size: var(--type-label-tag-size); font-weight: 700; letter-spacing: var(--type-label-tag-tracking); text-transform: uppercase; }
+.xlan-gallery { margin-top: var(--space-8); }
+.xlan-gallery a { color: var(--text-accent); }
+.xlan-foot { margin-top: var(--space-3); color: var(--text-secondary); }
+@media (max-width: 760px) {
+  .xlan-band { padding-block: var(--space-12); }
+  .xlan-idea { grid-template-columns: minmax(0, 1fr); gap: var(--space-8); }
+  .xlan-item { grid-template-columns: minmax(0, 1fr); gap: var(--space-3); padding: var(--space-5); }
+  .xlan-item__go { justify-self: end; }
+}
+.xlan-option { margin-top: var(--space-12); scroll-margin-top: var(--space-4); }
+.xlan-ideas { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: var(--space-4); }
+.xlan-idea-card { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-2); height: 100%; padding: var(--space-5); border-radius: var(--radius-md); background-color: var(--bg-surface); color: var(--text-primary); text-decoration: none; transition: transform var(--duration-base) var(--easing-settle), box-shadow var(--duration-base) var(--easing-settle); }
+.xlan-idea-card:hover { transform: translateY(-3px); box-shadow: var(--elevation-2); }
+.xlan-idea-card .xlan-item__go { margin-top: auto; align-self: flex-end; }
