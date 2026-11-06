@@ -6,15 +6,15 @@ Pazcare Product Designer assignment, by Abhinav Singh Tomar.
 | --- | --- |
 | 1. Design system from my portfolio (astodesign.com) | `design-system/` (tokens, styles, React components, gallery) and the Figma file *Astodesign — Design System* |
 | 2. A Claude Code skill that builds with it | `skills/astodesign/` (also linked at `.claude/skills/astodesign`) |
-| 3. Two products, three layouts each | `products/` (see `products/README.md`) |
+| 3. Two products, three layouts each | `products/` (the six layouts and my picks are in `products/README.md`) |
 
 ## Run it
 
 ```
-npm install            # offline here: scripts fall back to /opt/npm-tools
+npm install
 npm run tokens         # tokens.json -> tokens.css + tokens.ts
-npm run build          # every page into dist/
-python3 -m http.server -d dist 4321   # then open /design-system/gallery/
+npm run build          # every page into dist/; the landing page is the root
+python3 -m http.server -d dist 4321   # then open / for the landing page
 ```
 
 One layout: `node scripts/build.mjs products/<product>/<NN-slug>`, then
