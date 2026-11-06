@@ -73,3 +73,5 @@ Windows cover the paper on small laptops, three at once take most of the width, 
 - `AppShell` assumes one main pane, so this layout composes its own top bar and has no rail. Phones have no sheet to manage because windows take over the screen.
 - No system window or dock component; built with tokens.
 - `ds-msg` and `ds-card` needed scoped tightening inside a 360px window.
+
+Answering a post removes it from the home page, with Undo and Show answered to bring it back. Chats opened from People or Channels stay, because they aren't posts.

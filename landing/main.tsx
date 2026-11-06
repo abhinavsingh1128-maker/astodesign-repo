@@ -1,5 +1,5 @@
 // The way in: what this is, how to get it, and every screen it produced.
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import { Button, Modal, Tag } from '../design-system/components';
 import { MESSAGING, READER, OTHERS } from './data';
@@ -13,6 +13,8 @@ const thumb = (s: Screen) => THUMBS[s.path.replace('/', '-')];
 function Landing() {
   const [open, setOpen] = useState<Screen | null>(null);
   const close = useCallback(() => setOpen(null), []);
+  // Coming back from a layout, the browser restores the page as it was: start clean.
+  useEffect(() => { const on = () => setOpen(null); addEventListener('pageshow', on); return () => removeEventListener('pageshow', on); }, []);
   const tile = (s: Screen) => (
     <li key={s.path}>
       <button type="button" className="xlan-tile" aria-label={`About ${s.name}`} onClick={() => setOpen(s)}>
@@ -72,9 +74,7 @@ function Landing() {
         {open && <>
           <p className="ds-tagline xlan-panel__line">{open.line}</p>
           {open.notes.map((n) => <p key={n} className="xlan-panel__note">{n}</p>)}
-          <div className="xlan-wire" role="img" aria-label={`Wireframe of ${open.name}: ${open.wire.flat().join(', ')}`}>
-            {open.wire.map((col, i) => <div key={i} className="xlan-wire__col">{col.map((b) => <span key={b} className="xlan-wire__box">{b}</span>)}</div>)}
-          </div>
+          {open.why && <><p className="ds-kicker">Why it’s one of the three</p><p className="xlan-panel__note">{open.why}</p></>}
           <Button variant="primary" href={`./products/${open.path}/`}>Open the layout</Button>
         </>}
       </Modal>

@@ -14,8 +14,8 @@ const ROLES: Record<string, string> = { 'Kavya Reddy': 'Product designer', 'Mana
 
 // Saved between visits; survives a blocked or cleared store by falling back to the start state.
 const KEY = 'broadsheet-v1';
-type Saved = { read: Record<string, boolean>; extra: Record<string, Msg[]>; drafts: Record<string, string>; hidden: string[] };
-const EMPTY: Saved = { read: {}, extra: {}, drafts: {}, hidden: [] };
+type Saved = { read: Record<string, boolean>; extra: Record<string, Msg[]>; drafts: Record<string, string>; hidden: string[]; answered: Record<string, boolean> };
+const EMPTY: Saved = { read: {}, extra: {}, drafts: {}, hidden: [], answered: {} };
 const load = (): Saved => { try { return { ...EMPTY, ...JSON.parse(localStorage.getItem(KEY) ?? '{}') }; } catch { return EMPTY; } };
 const save = (s: Saved) => { try { localStorage.setItem(KEY, JSON.stringify(s)); } catch { /* still works for this visit */ } };
 
@@ -34,7 +34,8 @@ const MAX = () => (matchMedia('(max-width: 760px)').matches ? 1 : matchMedia('(m
 function Broadsheet() {
   useTabTrap();
   const [data, setData] = useState<Saved>(load);
-  const { read, extra, drafts, hidden } = data;
+  const { read, extra, drafts, hidden, answered } = data;
+  const [showAnswered, setShowAnswered] = useState(false);
   const put = useCallback((f: (d: Saved) => Saved) => setData((d) => { const n = f(d); save(n); return n; }), []);
   const [attached, setAttached] = useState<Record<string, File | undefined>>({});
   const forms = useRef<Record<string, HTMLFormElement | null>>({});
@@ -120,8 +121,12 @@ function Broadsheet() {
     if (!text && !file) return;
     const msg: Msg = { id: `s${Date.now()}`, who: ME, time: NOW, text: text || 'Shared a file.', file };
     setAttached((x) => ({ ...x, [s.key]: undefined }));
+    // Answering clears a post from the home page. Channel chats and personal chats are not posts.
+    const post = !s.key.startsWith('dm:') && !s.key.startsWith('c:');
+    const done = s.key.startsWith('m:') ? [s.key, ...stories.filter((x) => x.conv === s.conv && x.mentions && !isExtra(x.key)).map((x) => x.key)] : [s.key];
+    if (post) setToast({ t: 'Answered, and removed from the page', undo: () => { put((d) => { const a = { ...d.answered }; done.forEach((k) => delete a[k]); return { ...d, answered: a }; }); setToast(null); } });
     const bucket = s.key.startsWith('dm:') ? s.conv : isExtra(s.key) ? s.key : s.root.id;
-    put((d) => ({ ...d, extra: { ...d.extra, [bucket]: [...(d.extra[bucket] ?? []), msg] }, drafts: { ...d.drafts, [s.key]: '' } }));
+    put((d) => ({ ...d, extra: { ...d.extra, [bucket]: [...(d.extra[bucket] ?? []), msg] }, drafts: { ...d.drafts, [s.key]: '' }, answered: post ? { ...d.answered, ...Object.fromEntries(done.map((k) => [k, true])) } : d.answered }));
   };
   const markAll = () => {
     const before = read;
@@ -138,22 +143,24 @@ function Broadsheet() {
     put((d) => ({ ...d, extra: { ...d.extra, [c.id]: [...(d.extra[c.id] ?? []), m] } }));
     setTimeout(() => open(`${c.id}:${m.id}`), 0);
   };
-  const reset = () => { put(() => EMPTY); setWindows([]); setMini([]); setQ(''); setView('all'); setToast({ t: 'Edition reset to the start' }); };
+  const reset = () => { setShowAnswered(false); put(() => EMPTY); setWindows([]); setMini([]); setQ(''); setView('all'); setToast({ t: 'Edition reset to the start' }); };
 
   // Esc closes the window you are in.
   const onWinKey = (key: string) => (e: React.KeyboardEvent) => { if (e.key === 'Escape') { e.stopPropagation(); close(key); } };
 
   const needle = q.trim().toLowerCase();
-  const fits = (s: Story) => (view === 'all' || s.unread > 0) && (!needle || `${conv(s.conv).name} ${s.thread.map((m) => `${m.who} ${m.text}`).join(' ')}`.toLowerCase().includes(needle));
+  const gone = (s: Story) => !showAnswered && !!answered[s.key];
+  const fits = (s: Story) => !gone(s) && (view === 'all' || s.unread > 0) && (!needle || `${conv(s.conv).name} ${s.thread.map((m) => `${m.who} ${m.text}`).join(' ')}`.toLowerCase().includes(needle));
   // Rank from the edition itself, not read state, so stories never jump while you read.
   const fresh = (x: Story) => x.thread.filter((m) => m.isNew).length;
   const order = (l: Story[]) => [...l].sort((a, b) => Number(b.mentions && fresh(b) > 0) - Number(a.mentions && fresh(a) > 0) || fresh(b) - fresh(a) || mins(b.root) - mins(a.root));
   const groups = CONVS.filter((c) => c.kind === 'channel');
   const columns = groups.filter((c) => !hidden.includes(c.id)).map((c) => ({ c, list: order(stories.filter((s) => s.conv === c.id && !isExtra(s.key) && fits(s))) })).filter((x) => !needle && view === 'all' ? true : x.list.length);
-  const paperStories = stories.filter((s) => !isExtra(s.key));
+  const paperStories = stories.filter((s) => !isExtra(s.key) && !answered[s.key]);
   const totalUnread = paperStories.reduce((n, s) => n + s.unread, 0);
-  const boxes = stories.filter((s) => s.key.startsWith('m:') && (!needle || `${conv(s.conv).name} ${s.thread.map((m) => m.text).join(' ')}`.toLowerCase().includes(needle)) && (view === 'all' || s.unread > 0)).sort((a, b) => b.thread.filter((m) => m.who !== ME).length - a.thread.filter((m) => m.who !== ME).length);
-  const asks = stories.filter((s) => s.key.startsWith('m:') && s.unread > 0).length;
+  const boxes = stories.filter((s) => s.key.startsWith('m:') && !gone(s) && (!needle || `${conv(s.conv).name} ${s.thread.map((m) => m.text).join(' ')}`.toLowerCase().includes(needle)) && (view === 'all' || s.unread > 0)).sort((a, b) => b.thread.filter((m) => m.who !== ME).length - a.thread.filter((m) => m.who !== ME).length);
+  const asks = stories.filter((s) => s.key.startsWith('m:') && s.unread > 0 && !answered[s.key]).length;
+  const answeredCount = stories.filter((s) => answered[s.key] && !s.key.startsWith('m:')).length;
   const nothing = !columns.length && !boxes.length;
   const people = EVERYONE.filter((p) => !needle || p.toLowerCase().includes(needle) || (ROLES[p] ?? '').toLowerCase().includes(needle));
   const dmStory = (p: string) => stories.find((s) => s.key.startsWith('dm:') && conv(s.conv).name === p)!;
@@ -171,7 +178,7 @@ function Broadsheet() {
         <span className="xch08-story__head">{s.key.startsWith('dm:') ? `A letter from ${first(conv(s.conv).name)}` : headline(s.root.text)}</span>
         {lead && s.thread.length > 1 && <span className="xch08-story__deck">{rich(s.last.text)}</span>}
         <span className="xch08-story__meta">
-          {s.mentions && s.unread > 0 && <Tag variant="selected">For you</Tag>}
+          {answered[s.key] ? <Tag variant="selected">Answered</Tag> : s.mentions && s.unread > 0 && <Tag variant="selected">For you</Tag>}
           <span>{first(s.last.who)} · {s.last.yesterday ? 'Yesterday' : s.last.time}</span>
           {s.thread.length > 1 && <span>{s.thread.length} messages</span>}
           {s.unread > 0 && <span className="xch08-count ds-grain">{s.unread}<span className="ds-sr-only"> unread</span></span>}
@@ -197,6 +204,7 @@ function Broadsheet() {
           <p className="xch08-mast__sub" role="status">{asks > 0 ? `${asks} ${asks === 1 ? 'channel is' : 'channels are'} asking for you. ` : 'Nobody is waiting on you. '}{totalUnread} unread across {groups.length} groups.</p>
           <div className="xch08-mast__tools">
             <Button variant="ghost" size="sm" disabled={!totalUnread} onClick={markAll}>Mark edition read</Button>
+            {answeredCount > 0 && <Button variant="ghost" size="sm" aria-pressed={showAnswered} onClick={() => setShowAnswered(!showAnswered)}>{showAnswered ? 'Hide answered' : `Show answered ${answeredCount}`}</Button>}
             <Button variant="ghost" size="sm" onClick={reset}>Reset demo</Button>
           </div>
           <div className="xch08-sections" role="group" aria-label="Choose which groups run as columns">
@@ -256,7 +264,7 @@ function Broadsheet() {
             {columns.map(({ c, list }) => (
               <section key={c.id} id={`col-${c.id}`} className="xch08-col" aria-label={c.name}>
                 <header className="xch08-col__head"><h2 className="ds-h4"><button type="button" className="xch08-fold" aria-expanded={!folded[c.id]} onClick={() => setFolded((f) => ({ ...f, [c.id]: !f[c.id] }))}><span aria-hidden="true">{folded[c.id] ? '+' : '−'}</span> {title(c)}</button></h2><span className="ds-caption">{list.length} {list.length === 1 ? 'story' : 'stories'}</span></header>
-                {folded[c.id] ? null : list.length ? <ul>{list.map((s, i) => row(s, i === 0))}</ul> : <p className="ds-caption">No unread stories.</p>}
+                {folded[c.id] ? null : list.length ? <ul>{list.map((s, i) => row(s, i === 0))}</ul> : <p className="ds-caption">Nothing left to read here.</p>}
               </section>
             ))}
           </div>

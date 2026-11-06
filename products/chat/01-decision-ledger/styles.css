@@ -16,3 +16,5 @@
 .xch03-root .ds-sheet .xck-composer { margin: 0; }
 @media (max-width: 760px) { .xch03-main { padding: var(--space-4); } }
 .xch03-talk__top { display: flex; align-items: center; justify-content: space-between; width: 100%; }
+@media (min-width: 761px) { .xch03-root .ds-app, .xch03-root .ds-app--aside { grid-template-columns: [side] 320px [main] minmax(0, 1fr); } .xch03-root .ds-app--aside { grid-template-columns: [side] 320px [main] minmax(0, 1fr) [aside] 360px; } }
+@media (min-width: 761px) and (max-width: 1100px) { .xch03-root .ds-app, .xch03-root .ds-app--aside { grid-template-columns: [side] 280px [main] minmax(0, 1fr); } }
