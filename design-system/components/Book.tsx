@@ -1,10 +1,10 @@
-import { Children, useCallback, useEffect, useRef, useState } from 'react';
+import { Children, useCallback, useLayoutEffect, useRef, useState } from 'react';
 import type { ReactNode } from 'react';
 
 /* The book and page display from astodesign.com (About, Research, Contact).
    <Book> holds spreads; each <Spread> has a left and a right <Page>.
    Desktop: two pages side by side with a spine; "← Flip back" on the left page footer,
-   "Next →" on the right. Turning animates the leaf (rotateY, --easing-turn).
+   "Next →" on the right. Turning swings a two-sided leaf over the spine.
    Phones (< 900px) and reduced motion: one page at a time, cross-fade, swipe or buttons. */
 
 export type PageProps = {
@@ -48,13 +48,24 @@ export function Book({ children, index, onIndexChange, backLabel = '← Flip bac
   const [own, setOwn] = useState(0);
   const i = index ?? own;
   const set = useCallback((n: number) => { const c = Math.max(0, Math.min(spreads.length - 1, n)); onIndexChange ? onIndexChange(c) : setOwn(c); }, [spreads.length, onIndexChange]);
-  const [turn, setTurn] = useState<'' | 'fwd' | 'back'>('');
+  // The leaf, as on astodesign.com: a two-sided page swings over the spine while the next spread waits beneath.
+  const [turn, setTurn] = useState<{ from: number; to: number; go: boolean } | null>(null);
   const prev = useRef(i);
-  useEffect(() => { if (prev.current !== i) { setTurn(i > prev.current ? 'fwd' : 'back'); prev.current = i; const t = setTimeout(() => setTurn(''), 900); return () => clearTimeout(t); } }, [i]);
-  const go = (n: number) => set(n);
+  useLayoutEffect(() => {
+    if (prev.current === i) return;
+    const from = prev.current; prev.current = i;
+    const flat = matchMedia('(max-width: 900px), (prefers-reduced-motion: reduce)').matches;
+    setTurn({ from, to: i, go: false });
+    const raf = requestAnimationFrame(() => requestAnimationFrame(() => setTurn((t) => (t ? { ...t, go: true } : t))));
+    const t = setTimeout(() => setTurn(null), flat ? 460 : 900);
+    return () => { cancelAnimationFrame(raf); clearTimeout(t); };
+  }, [i]);
+  const go = (n: number) => { if (!turn) set(n); };
   // swipe on touch
   const x0 = useRef<number | null>(null);
   const cur = spreads[i];
+  const from = turn ? spreads[turn.from] : undefined;
+  const fwd = turn ? turn.to > turn.from : true;
   return (
     <div className="ds-book">
       {contents && spreads.length > 1 && (
@@ -64,17 +75,24 @@ export function Book({ children, index, onIndexChange, backLabel = '← Flip bac
           ))}
         </nav>
       )}
-      <div className={`ds-book__spread${turn ? ` is-turning is-${turn}` : ''}`} role="group" aria-roledescription="book spread" aria-label={cur?.props.title}
+      <div className={`ds-book__spread${turn ? ' is-turning' : ''}`} role="group" aria-roledescription="book spread" aria-label={cur?.props.title}
         onTouchStart={(e) => { x0.current = e.touches[0].clientX; }}
         onTouchEnd={(e) => { if (x0.current === null) return; const dx = e.changedTouches[0].clientX - x0.current; if (Math.abs(dx) > 50) go(i + (dx < 0 ? 1 : -1)); x0.current = null; }}
         onKeyDown={(e) => { if (e.key === 'ArrowRight') go(i + 1); if (e.key === 'ArrowLeft') go(i - 1); }}>
-        {cur}
+        {!turn && cur}
+        {turn && (fwd ? <>{from?.props.left}{cur?.props.right}</> : <>{cur?.props.left}{from?.props.right}</>)}
+        {turn && (
+          <div className={`ds-book__leaf ${fwd ? 'is-fwd' : 'is-bwd'}${turn.go ? ' is-go' : ''}`} aria-hidden="true" inert>
+            <div className="ds-book__face">{fwd ? from?.props.right : from?.props.left}</div>
+            <div className="ds-book__face ds-book__face--back">{fwd ? cur?.props.left : cur?.props.right}</div>
+          </div>
+        )}
         <span className="ds-book__spine" aria-hidden="true" />
         <div className="ds-book__foot ds-book__foot--left" data-surface="paper">
-          {i > 0 && <button type="button" className="ds-btn ds-btn--ghost" onClick={() => go(i - 1)}>{backLabel}</button>}
+          {!turn && i > 0 && <button type="button" className="ds-btn ds-btn--ghost" onClick={() => go(i - 1)}>{backLabel}</button>}
         </div>
         <div className="ds-book__foot ds-book__foot--right" data-surface="paper">
-          {i < spreads.length - 1 && <button type="button" className="ds-btn ds-btn--ghost" onClick={() => go(i + 1)}>{nextLabel}</button>}
+          {!turn && i < spreads.length - 1 && <button type="button" className="ds-btn ds-btn--ghost" onClick={() => go(i + 1)}>{nextLabel}</button>}
         </div>
       </div>
       <p className="ds-sr-only" aria-live="polite">{cur?.props.title}, spread {i + 1} of {spreads.length}</p>
