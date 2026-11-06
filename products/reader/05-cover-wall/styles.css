@@ -24,3 +24,13 @@
   .xre05-search { flex: 1 1 100%; order: 3; }
   .xre05-revs li { flex-direction: column; }
 }
+.xre05-brand { margin-bottom: var(--space-1); font-family: var(--font-serif); font-size: var(--type-heading-4-size); font-weight: 600; }
+.xre05-root .ds-rail__header .xre05-me { margin-top: var(--space-4); }
+.xre05-social { display: flex; align-items: center; gap: var(--space-3); margin-block: var(--space-1); }
+.xre05-facts { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-2) var(--space-3); width: 100%; margin: 0; padding-block: var(--space-2); box-shadow: inset 0 1px 0 var(--border-subtle), inset 0 -1px 0 var(--border-subtle); }
+.xre05-facts dt { font-size: var(--type-label-tag-size); font-weight: 700; letter-spacing: var(--type-label-tag-tracking); text-transform: uppercase; color: var(--text-secondary); }
+.xre05-facts dd { margin: 0; font-size: var(--type-body-s-size); }
+.xre05-tags { display: flex; flex-wrap: wrap; gap: var(--space-1); }
+.xre05-friends { display: flex; align-items: center; gap: var(--space-2); }
+.xre05-friends > div { display: flex; }
+.xre05-friends .ds-avatar + .ds-avatar { margin-left: calc(-1 * var(--space-2)); }

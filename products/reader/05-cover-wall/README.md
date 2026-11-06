@@ -31,9 +31,9 @@
 - [x] Reading now on top — `xre05-now`
 - [x] Wall of covers — `xre05-covers`
 - [x] Progress — `Progress`
-- [x] Search — `Search the wall`
+- [x] Search and site links in the left rail — `Search books`, `Discover`, `Recommendations`, `Community`
 - [x] Sort — `Segmented`
-- [x] Book details — `xre05-detail`
+- [x] Book details: likes, rating, tags, friends, time to read — `xre05-detail`, `likesOf`, `tagsOf`, `friendsOf`, `xre05-facts`
 - [x] Challenge in the rail — `Ring`
 - [x] Reviews view — `xre05-revs`
 - [x] Empty result — `EmptyState`
@@ -65,3 +65,5 @@ Numbers and writing take a back seat, and book names are hidden until you pick a
 ## System tension
 
 - `Message`, `Modal` and `AppShell` needed the same scoped fixes as earlier layouts (Tab trap, phone rail shadow, tighter messages). Covers use Open Library images, an owner-approved exception to the rule on real cover art, and `CoverTile` text sizes stay below the minimum without them at small sizes.
+
+Community figures (likes, community rating, friends) are sample data derived from each title. Browse genres, Community, Discussions and the inbox items only show a toast.
