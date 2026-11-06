@@ -1,0 +1,31 @@
+/* Habits 01: week ledger. Prefix .xha01-, tokens only. */
+.xha01-page { display: flex; flex-direction: column; gap: var(--space-6); padding: var(--space-6); max-width: 1120px; width: 100%; }
+.xha01-summary { display: grid; grid-template-columns: auto minmax(180px, 1fr) minmax(160px, 220px) minmax(160px, 220px); gap: var(--space-8); align-items: center; }
+.xha01-summary__bars { display: flex; flex-direction: column; gap: var(--space-2); }
+.xha01-ledger { overflow-x: auto; border-radius: var(--radius-lg); box-shadow: var(--elevation-1); background-color: var(--bg-surface); }
+.xha01-table { width: 100%; min-width: 640px; border-collapse: collapse; }
+.xha01-table th, .xha01-table td { padding: var(--space-2) var(--space-3); border-bottom: 1px solid var(--border-subtle); text-align: center; }
+.xha01-table thead th { font-size: var(--type-label-tag-size); font-weight: 700; letter-spacing: var(--type-label-tag-tracking); text-transform: uppercase; color: var(--text-secondary); border-bottom-color: var(--border-strong); padding-block: var(--space-3); }
+.xha01-table thead th:first-child, .xha01-table tbody th { text-align: left; padding-left: var(--space-5); }
+.xha01-table tbody tr:last-child > * { border-bottom: 0; }
+.xha01-table .is-today { background: color-mix(in srgb, var(--accent-gold) 12%, transparent); }
+.xha01-table thead .is-today { color: var(--text-primary); box-shadow: inset 0 -2px 0 var(--accent-gold); }
+.xha01-table .is-num { text-align: right; padding-right: var(--space-5); font-variant-numeric: tabular-nums; color: var(--text-secondary); }
+.xha01-name { display: block; font-family: var(--font-serif); font-size: var(--type-heading-4-size); font-weight: 600; line-height: 1.2; }
+.xha01-area { font-size: var(--type-body-s-size); color: var(--text-muted); }
+.xha01-met { color: var(--status-success); font-weight: 700; }
+.xha01-check { width: var(--hit-min); height: var(--hit-min); display: inline-grid; place-items: center; border: 1.5px solid var(--border-subtle); border-radius: var(--radius-md); background: transparent; color: var(--white); transition: background var(--duration-fast) var(--easing-standard), border-color var(--duration-fast); }
+.xha01-check:hover:not(:disabled) { border-color: var(--border-strong); }
+.xha01-check.is-on { background: var(--accent-lacquer); border-color: transparent; }
+.xha01-check:disabled { opacity: .35; cursor: default; }
+.xha01-check svg { width: var(--icon-m); height: var(--icon-m); fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+@media (max-width: 1100px) { .xha01-summary { grid-template-columns: auto 1fr; } }
+@media (max-width: 560px) {
+  .xha01-page { padding: var(--space-4); }
+  .xha01-summary { grid-template-columns: 1fr; justify-items: start; gap: var(--space-5); }
+  .xha01-summary__bars { width: 100%; }
+}
+.xha01-table tbody th { min-width: 168px; }
+@media (max-width: 760px) {
+  .xha01-table tbody th, .xha01-table thead th:first-child { position: sticky; left: 0; z-index: 1; background-color: var(--bg-surface); box-shadow: inset -1px 0 0 var(--border-subtle); }
+}

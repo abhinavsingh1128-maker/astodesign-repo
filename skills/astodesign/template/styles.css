@@ -1,0 +1,2 @@
+/* Layout CSS. Prefix every class with .{{PREFIX}}- and use tokens only (var(--...)). */
+.{{PREFIX}}-main { padding: var(--space-6); }

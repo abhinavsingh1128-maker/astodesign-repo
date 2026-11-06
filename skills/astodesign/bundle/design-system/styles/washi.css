@@ -1,0 +1,27 @@
+/* Washi texture, matched to astodesign.com.
+   Night: fibre lines in light (washi-glow, "screen") over the teal.
+   Paper: the cloudy grain (washi-paper, "multiply") plus faint dark fibre lines (washi-fibre-ink).
+   Both are built into the surface. Never lay one texture layer over the whole page. */
+
+[data-surface="night"].ds-washi,
+.ds-washi-night {
+  background-image: url("../assets/washi-glow.webp");
+  background-repeat: repeat;
+  background-size: 384px;
+  background-blend-mode: screen;
+}
+
+[data-surface="paper"].ds-washi,
+.ds-washi-paper,
+.ds-card, .ds-modal, .ds-sheet, .ds-page {
+  background-image: url("../assets/washi-fibre-ink.webp"), url("../assets/washi-paper.webp");
+  background-repeat: repeat, repeat;
+  background-size: 384px, 384px;
+  background-blend-mode: normal, multiply;
+}
+
+/* Strength by intensity (set on <html> or any wrapper). Medium is the default. */
+[data-intensity="low"] .ds-washi-night,
+[data-intensity="low"] [data-surface="night"].ds-washi { background-image: none; }
+[data-intensity="low"] .ds-card, [data-intensity="low"] .ds-modal, [data-intensity="low"] .ds-sheet,
+[data-intensity="low"] .ds-washi-paper, [data-intensity="low"] [data-surface="paper"].ds-washi { background-image: url("../assets/washi-paper.webp"); background-blend-mode: multiply; }

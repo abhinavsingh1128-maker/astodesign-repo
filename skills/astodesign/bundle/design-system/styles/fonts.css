@@ -1,0 +1,3 @@
+/* Cormorant Garamond is the portfolio's serif. It loads from Google Fonts.
+   Offline or blocked, the stack in tokens falls back to Georgia: the layout still holds, the voice gets plainer. */
+@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&display=swap");
