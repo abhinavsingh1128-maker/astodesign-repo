@@ -1,6 +1,10 @@
 # Products
 
-Two products, three layouts each, every one starting from a different idea. All six are built with the `astodesign` skill and run from `npm run build`.
+Every product built with the `astodesign` skill lives here in its own folder. New ones can be added at any time, and `npm run build` picks them up.
+
+# Assignment layouts
+
+The submission: two products, three layouts each, every one starting from a different idea.
 
 ## Messaging: a Slack alternative
 
