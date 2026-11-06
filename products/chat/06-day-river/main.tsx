@@ -38,7 +38,7 @@ function River() {
     <div className="xch06-panel">
       <header className="xch06-panel__head"><p className="ds-kicker">{title(conv(b.conv))} · {b.hour}:00</p><h2 className="ds-h4">{first(b.root!.who)} started this at {b.root!.time}</h2></header>
       <div className="xch06-panel__stream"><Talk list={[b.root!, ...(b.root!.replies ?? []), ...(extra[b.root!.id] ?? [])]} /></div>
-      <Composer placeholder={`Reply to ${first(b.root!.who)}`} onSend={(t) => setExtra((x) => ({ ...x, [b.root!.id]: [...(x[b.root!.id] ?? []), mine(t)] }))} />
+      <Composer placeholder={`Reply to ${first(b.root!.who)}`} onSend={(t, f) => setExtra((x) => ({ ...x, [b.root!.id]: [...(x[b.root!.id] ?? []), mine(t, f)] }))} />
     </div>
   );
   return (

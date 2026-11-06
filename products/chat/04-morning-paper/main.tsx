@@ -54,7 +54,7 @@ function Paper() {
                   <Button variant="secondary" size="sm" aria-expanded={isOpen} onClick={() => { setOpen(isOpen ? null : s.id); setRead((r) => ({ ...r, [s.id]: true })); }}>{isOpen ? 'Close' : 'Read and reply'}</Button>
                   {read[s.id] ? <Tag variant="selected">Read</Tag> : <Button variant="ghost" size="sm" onClick={() => setRead((r) => ({ ...r, [s.id]: true }))}>Mark read</Button>}
                 </div>
-                {isOpen && <div className="xch04-talk"><Talk list={[...allMsgs(c), ...(extra[s.conv] ?? [])]} /><Composer primary={false} placeholder={`Reply in ${title(c)}`} onSend={(t) => setExtra((x) => ({ ...x, [s.conv]: [...(x[s.conv] ?? []), mine(t)] }))} /></div>}
+                {isOpen && <div className="xch04-talk"><Talk list={[...allMsgs(c), ...(extra[s.conv] ?? [])]} /><Composer primary={false} placeholder={`Reply in ${title(c)}`} onSend={(t, f) => setExtra((x) => ({ ...x, [s.conv]: [...(x[s.conv] ?? []), mine(t, f)] }))} /></div>}
               </article>
             );
           })}
