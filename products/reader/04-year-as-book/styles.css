@@ -1,0 +1,18 @@
+/* Reader 04: year as a book. Prefix .xre04-, tokens only. */
+.xre04-page { min-height: 100vh; }
+.xre04-wrap { padding-block: var(--space-6) var(--space-12); }
+.xre04-title { display: flex; flex-direction: column; align-items: center; gap: var(--space-3); text-align: center; padding-top: var(--space-8); }
+.xre04-now { list-style: none; margin: var(--space-3) 0 var(--space-12); padding: 0; display: flex; flex-direction: column; gap: var(--space-4); }
+.xre04-now li { display: flex; gap: var(--space-4); }
+.xre04-now li > div { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: var(--space-1); }
+.xre04-now .ds-cover { --w: 72px; }
+.xre04-name { font-family: var(--font-serif); font-size: var(--type-heading-4-size); font-weight: 600; line-height: 1.2; }
+.xre04-ring { display: flex; flex-direction: column; align-items: center; gap: var(--space-4); padding-top: var(--space-8); text-align: center; }
+.xre04-figs { display: flex; flex-wrap: wrap; gap: var(--space-6); margin: var(--space-5) 0 0; }
+.xre04-figs dt { font-size: var(--type-label-tag-size); font-weight: 700; letter-spacing: var(--type-label-tag-tracking); text-transform: uppercase; color: var(--text-secondary); }
+.xre04-figs dd { margin: 0; font-size: var(--type-heading-3-size); font-weight: 700; }
+.xre04-covers { list-style: none; margin: var(--space-4) 0 var(--space-3); padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-3); justify-items: center; }
+.xre04-covers .ds-cover { --w: 96px; }
+.xre04-empty { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-3); padding-top: var(--space-5); }
+.xre04-leaf { display: flex; justify-content: space-between; margin-bottom: var(--space-12); }
+.xre04-rev { display: flex; flex-direction: column; gap: var(--space-1); margin: var(--space-4) 0; font-size: var(--type-body-m-size); line-height: var(--type-body-m-line); }

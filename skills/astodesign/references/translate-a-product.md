@@ -2,7 +2,7 @@
 
 Use this in TRANSLATE and VARIANT mode (see the decision tree in
 `SKILL.md`). The product\'s structure and behaviour stay; the skin
-changes. Build `00-parity-<screen>` before anything else.
+changes. Build `00-parity-<screen>` first, unless the brief names a specific layout; then build that and say so in the README.
 
 ## 1. Anatomy inventory
 

@@ -84,7 +84,7 @@ In the layout README (template has the fields):
    - Pages with no rail (product detail, profile, landing, article): `Surface tone="night" backdrop` + `Nav` + `ds-container`.
    - **Nav:** `layout="bar"` for products (brand left, 4+ links, search, notifications, avatar on the right). The default centred pill is for the portfolio and ≤ 4 links; it collides with a search box.
 2. **App components:** `Rail/RailSection/RailItem`, `Toolbar/ToolbarDivider/Segmented`, `Tabs`, `Banner`, `Message/Mention/StreamDivider`, `CoverTile` (2:3, 1:1, 4:3), `Ring/Bars/Progress`, `Table`, `Toast`.
-3. **Core components:** `Surface, Scene, Nav, Button, Tag, Avatar, Input, Card, List/ListItem/ListSection, Modal (modal | sheet), EmptyState`.
+3. **Core components:** `Surface, Scene, Nav, Button, Tag, Avatar, Input, Card, List/ListItem/ListSection, Modal (`variant`: dialog, wide, sheet, sheet-left), EmptyState`.
 4. **Classes:** `ds-display-xl/l`, `ds-h2/3/4`, `ds-kicker`, `ds-tagline`, `ds-caption`, `ds-label`, `ds-rule`, `ds-container`, `ds-stack`, `ds-row`, `ds-enter`, `ds-grain`.
 5. **Only then** your own CSS in the layout's `styles.css`, with a prefix (`.fd-…`), tokens only. You may adjust a system class only when scoped under your prefix (`.fd-cart .ds-btn--sm { … }`), never globally, and write it in the README as a system tension so it can be fixed in the system. Recipes for things with no component (switch, checkbox, quantity stepper, select, bottom tab bar, map, calendar grid) are in `references/patterns.md`.
 
@@ -101,7 +101,7 @@ Props and snippets for every component: `references/components.md`. Gaps already
   - Paper, Card, Modal, Sheet, Page, Table, Banner and CoverTile have this built in. A Night page or shell gets `className="ds-washi"` (or uses `backdrop`/`AppShell`).
   - If you can't see fibre lines in your screenshot at 100%, the texture is missing; fix that before anything else. Any coloured block you make gets `className="ds-grain"`. A flat colour block with no grain is a bug (the screenshot check flags it). **NEW: never lay one grain overlay over the whole page** (a fixed full-screen layer): it covers modals and text and fakes the texture instead of building it in.
 - **Counts are computed from your data** (a shelf says 12 if 12 books are on it), so filters stay true. Use enough records to look real; don't print the reference's 356.
-- **Density matches the real product.** Chat streams, shelves, menus, tables are dense: 20+ covers, 4+ messages with reactions and files, full menus. Use `List density="compact"`, `Table density="compact"`; drop avatars on repeated rows before you shrink text. Never below 13.5px body / 10.5px labels.
+- **Density matches the real product.** Chat streams, shelves, menus, tables are dense: 20+ covers, 4+ messages with reactions and files, full menus. Use `List compact`, `Table density="compact"`; drop avatars on repeated rows before you shrink text. Never below 13.5px body / 10.5px labels.
 - **Illustration:** at most one `<Scene>` per screen, only for a hero or first-run moment, never behind dense UI.
 
 ## Step 3c (NEW): the book and page display
@@ -117,7 +117,7 @@ The portfolio's About, Research and Contact pages are **open books**: two Paper 
 
 - **One apply model per filter set.** Either every filter applies live (checkboxes, price, chips), or all of them wait for one Apply. Never mix. On a phone sheet, the close button says what you'll get: "Show 12 chairs".
 - **Nothing important is hover-only.** Anything that appears on hover (Quick view, row actions, mega menus) must also open on click or tap and be visible on touch screens (`@media (hover: none)`).
-- **Modals and sheets** move focus in, trap Tab inside, close on Esc and on the scrim, and return focus to the control that opened them.
+- **Modals and sheets** move focus in, trap Tab inside, close on Esc and on the scrim, and return focus to the control that opened them. `Modal` does all of this for you; your own popovers must do the Esc, outside-click and focus parts themselves.
 - **Mega menus and dropdowns** open on click (and hover on pointer devices), close on Esc and on an outside click, and become inline lists in the phone menu.
 - **Empty results** say what happened and offer the fix ("No chairs match. Clear all filters.").
 
@@ -128,8 +128,14 @@ node skills/astodesign/scripts/new-layout.mjs <product> <NN-slug> "<one-line ide
 node scripts/build.mjs products/<product>/<NN-slug>                                    # builds just this layout (npm run build = everything)
 node skills/astodesign/scripts/check-layout.mjs products/<product>/<NN-slug>           # 0 errors required
 node skills/astodesign/scripts/shoot.mjs <product>/<NN-slug> shots/<product>           # 1280, 1100, 390: overflow, overlaps, flat blocks, density
-python3 skills/astodesign/scripts/compare.py <reference.png> shots/<product>/<product>-<NN-slug>-desktop.png shots/<product>/compare.png
+python3 skills/astodesign/scripts/compare.py <reference.png> shots/<product>/<product>-<NN-slug>-desktop.png shots/<product>/compare.png   # only with a reference; needs Pillow
 ```
+
+**If `shoot.mjs` can't launch:** it tries Playwright's browser, then an installed Chrome. If neither exists, run `npx playwright install chromium` or say plainly that the screenshots were not taken.
+
+**The source wins.** If `references/components.md` and `design-system/components/*.tsx` ever disagree, follow the source and note it in System tension. `node skills/astodesign/scripts/check-docs.mjs` compares them.
+
+**The scripts miss a lot:** they don't see collapsed elements, awkward wrapping, or anything below the fold inside `AppShell`, because panes scroll inside the viewport. Scroll, click and screenshot those states too.
 
 **Look at every screenshot yourself**, and click through what shoot.mjs can't see (menus, sheets, modals, the phone rail). Then go through `references/identity-checklist.md`. The serif (Cormorant Garamond) loads from Google Fonts; if the network is blocked it falls back to Georgia, so shapes and spacing are right but the serif looks plainer. Say so when you report screenshots taken offline; if the build cannot run at all, write the layout anyway and say plainly it was not built.
 
@@ -141,7 +147,7 @@ README fields (template): Idea, **Intensity (Low/Medium/High, and whether you we
 
 - ⚙ Only semantic tokens; the six cover pigments (`PIGMENTS`) are the single raw-colour exception. ⚙ No flat colour blocks without grain.
 - ⚙ Only token fonts. Serif for titles, names, display lines ≤ ~12 words; sans for messages, reviews, descriptions, anything long. ⚙ Nothing under 10.5px (labels) / 13.5px (body). **NEW: this includes captions, legal lines, utility links, footer text, brand sublines and the "+ N more" meta under tiles.**
-- ⚙ Radii from `--radius-*`; round only avatars, rings, dots, count badges. ⚙ No shadow at rest (Elevation 2 on hover/float, 4 for modal/sheet).
+- ⚙ Radii from `--radius-*`; layout blocks almost square, with round for avatars, rings, dots, count badges, buttons, segmented and toast. ⚙ No shadow at rest in your own CSS (Elevation 2 on hover/float, 4 for modal/sheet).
 - ⚙ One `<Scene>` per screen. ⚙ Every `Input` labelled. ⚙ README complete; ⚙ every must-keep has evidence in code.
 - **One primary `Button` per view.** A view is what is on screen at once: the page around the fold, a modal, a sheet. **NEW: actions repeated on every tile or row (Add, Quick view, Edit) are `variant="secondary"` or `"ghost"`, never primary.** Back/cancel is ghost ("← Flip back"). A read-only Modal passes only a ghost close action (or none); it doesn't need a primary.
 - **Colour jobs (NEW: with the cases agents get wrong):**
@@ -156,7 +162,7 @@ README fields (template): Idea, **Intensity (Low/Medium/High, and whether you we
   No count badge shows 0; hide it. A cart count is a neutral Paper badge. No new hues, no icon font, no emoji as UI.
 - Copy a reference's structure and function, never its identity: no logos, product names, brand colours, real cover art or marketing copy. Use a neutral name. Real-world content (book titles, dish names, cities) is fine and encouraged; just don't copy the reference's exact items or promo wording.
 - Motion from `--duration-*` / `--easing-*` only; fades (not slides) in dense streams; respect reduced motion.
-- Real buttons and links, visible focus, 44px touch targets, 390px wide with no sideways scroll, sidebars become sheets.
+- Real buttons and links, visible focus, 44px touch targets for your own controls (`Tag`, `Segmented` and reactions are 32px by design; the screenshot check flags under 32px), 390px wide with no sideways scroll, sidebars become sheets.
 - Real content only (names, titles, prices, times). No lorem ipsum.
 
 ## Setup: this skill folder is self-contained

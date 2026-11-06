@@ -1,0 +1,4 @@
+.xrk-stars { color: var(--accent-lacquer); font-size: var(--type-body-s-size); letter-spacing: .05em; white-space: nowrap; }
+[data-surface="night"] .xrk-stars { color: var(--accent-gold); }
+[data-surface="night"] [data-surface="paper"] .xrk-stars { color: var(--accent-lacquer); }
+.xrk-stars__off { color: var(--border-subtle); }

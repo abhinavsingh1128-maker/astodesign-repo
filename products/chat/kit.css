@@ -1,0 +1,14 @@
+/* Shared chat kit. Prefix .xck-, tokens only. */
+.xck-brand { font-family: var(--font-serif); font-size: var(--type-heading-4-size); font-weight: 600; }
+.xck-me { display: flex; align-items: center; gap: var(--space-2); }
+.xck-composer { flex: none; display: flex; flex-direction: column; gap: var(--space-1); padding: var(--space-3) var(--space-4); box-shadow: inset 0 1px 0 var(--border-strong); background-color: var(--bg-surface); }
+.xck-composer .ds-field__input { resize: none; }
+.xck-composer__foot { display: flex; align-items: center; justify-content: space-between; }
+.ds-sheet .xck-composer { margin: 0 calc(-1 * var(--space-6)) calc(-1 * var(--space-6)); }
+@media (max-width: 760px) { .xck-composer__foot .ds-btn { min-width: var(--hit-min); } }
+.ds-app__aside .ds-msg, .ds-sheet .ds-msg { padding-inline: var(--space-4); grid-template-columns: 28px minmax(0, 1fr); gap: var(--space-2); }
+.ds-app__aside .ds-msg .ds-avatar--m, .ds-sheet .ds-msg .ds-avatar--m { --size: 28px; }
+.ds-msg__attachments .ds-card__title { font-family: var(--font-sans); font-size: var(--type-body-m-size); font-weight: 700; overflow-wrap: anywhere; }
+.ds-msg__attachments .ds-card__note { border-top: 0; padding-top: 0; margin-top: 0; }
+@media (max-width: 760px) { .ds-app__sidebar:not([data-open="true"]) { box-shadow: none; } .ds-reaction { min-height: 32px; } }
+.xck-composer .ds-toolbar__start { gap: 0; flex-wrap: nowrap; }

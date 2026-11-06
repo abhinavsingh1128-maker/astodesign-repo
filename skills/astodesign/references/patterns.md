@@ -67,7 +67,7 @@ Use `<Message>` (with `grouped`, `reactions`, `attachments`, `thread`,
 Sits in `--bg-sunken` at the bottom of the thread on the same surface,
 with `--radius-md`. Use a compact `Input multiline hideLabel` (2--8 rows
 auto) and, on the right, a small primary `Button` \"Send\". The toolbar
-row above uses ghost icon buttons (20px line icons).
+row above uses ghost text buttons (B, I, Code, Attach).
 
     .composer { margin: var(--space-3) var(--space-4) var(--space-4); padding: var(--space-3); border-radius: var(--radius-md); background: var(--bg-sunken); box-shadow: var(--elevation-1); }
     .composer:focus-within { box-shadow: inset 0 0 0 2px var(--focus); }
@@ -77,7 +77,7 @@ row above uses ghost icon buttons (20px line icons).
 A right-hand Paper panel (`Surface tone="paper"`) about 380--440px wide.
 It has a kicker (\"Thread\"), a serif title (the channel name), the
 parent message, a hairline, then the replies and their own composer. On
-phones it becomes a `Modal as="sheet"`.
+phones it becomes a `Modal variant="sheet"`.
 
 ### Channel sidebar
 
@@ -86,7 +86,7 @@ Use `<Rail>` / `<RailSection>` /
 
 ### Presence and typing
 
-`Avatar online` for presence. The typing line is a `ds-caption` in
+`Avatar presence="on"` for presence. The typing line is a `ds-caption` in
 `--text-muted` italic sans (\"Ritu is typing...\").
 
 ## Browse: grids and shelves
@@ -101,12 +101,12 @@ itself).
 
 ### Filters
 
-A `ds-row` of `Tag onClick pressed count`. For more than 7 options, show
+A `ds-row` of `Tag onClick pressed` (put any count in the label). For more than 7 options, show
 the top 5 and a `Tag variant="outline"` \"More\" that opens a sheet.
 
 ### Long lists (hundreds of rows)
 
--   Use `List density="compact"`.
+-   Use `List compact`.
 -   Add a sticky header row in `ds-label` caps
     (`position: sticky; top: 0; background: var(--bg-canvas)`).
 -   Keep 13.5px sans meta.
@@ -117,7 +117,7 @@ the top 5 and a `Tag variant="outline"` \"More\" that opens a sheet.
 
 ### Stat card
 
-    <Card variant="plain" compact kicker="Pages this year" title={<span className="ds-display-l">8,412</span>} summary="↑ 1,240 on last year" />
+    <Card variant="plain" title={<span className="ds-display-l">8,412</span>} note="↑ 1,240 on last year" />
 
 The number is in the serif (it is a display line). The label is a
 kicker. The change is a `body-s` line. Use `--status-success` only for
@@ -245,7 +245,7 @@ text.
     /* Checkbox: 20px, lacquer when checked (selected / done) */
     .x-check { appearance: none; width: 20px; height: 20px; margin: 0; border-radius: var(--radius-sm); box-shadow: inset 0 0 0 1.5px var(--border-strong); background: transparent; cursor: pointer; display: inline-grid; place-items: center; }
     .x-check:checked { background: var(--accent-lacquer); box-shadow: none; }
-    .x-check:checked::after { content: "✓"; color: var(--action-text); font: 700 13px/1 var(--font-sans); }
+    .x-check:checked::after { content: "✓"; color: var(--action-text); font: 700 13.5px/1 var(--font-sans); }
 
     /* Quantity stepper (cart, menu ADD): charcoal block, 3px corners */
     .x-stepper { display: inline-flex; align-items: center; height: 34px; border-radius: var(--radius-sm); background: var(--action-bg); color: var(--action-text); font: 700 var(--type-label-button-size)/1 var(--font-sans); }
@@ -254,7 +254,7 @@ text.
     /* At zero, show one charcoal "ADD" Button size="sm" instead. Both buttons need aria-labels ("Remove one Paneer tikka"). */
 
     /* Select: the native element, styled like the compact Input */
-    .x-select { appearance: none; min-height: 34px; padding: 6px 28px 6px 0; border: 0; border-bottom: 1px solid var(--border-subtle); border-radius: 0; background: transparent; color: var(--text-primary); font: 400 var(--type-body-s-size)/1.3 var(--font-sans); cursor: pointer; }
+    .x-select { appearance: none; min-height: var(--hit-min); padding: 6px 28px 6px 0; border: 0; border-bottom: 1px solid var(--border-subtle); border-radius: 0; background: transparent; color: var(--text-primary); font: 400 var(--type-body-s-size)/1.3 var(--font-sans); cursor: pointer; }
 
 -   **Star rating:** `★` glyphs, `--accent-lacquer` on Paper,
     `--accent-gold` on Night, empty ones `--border-strong`. Always pair
@@ -268,7 +268,7 @@ text.
     and a 6px centre dot in `--status-success` (veg) or `--status-error`
     (non-veg), with `aria-label`. Never colour alone: the dish name also
     carries \"(veg)\" for screen readers.
--   **Stat card:** `Card variant="plain" compact` with kicker (metric
+-   **Stat card:** `Card variant="plain"` with kicker (metric
     name), serif value (`ds-h2`), and a delta line in `ds-caption`:
     `▲ 12% vs last week` in `--status-success`, `▼` in `--status-error`.
 
@@ -296,3 +296,7 @@ text.
     `--border-subtle`, today\'s column header gold; events are grained
     pigment blocks (`ds-grain`, `--radius-sm`) with sans title and time,
     one pigment per calendar from `PIGMENTS`. Now-line: 2px sakura.
+
+## Status mark (no component yet)
+
+For flagged, overdue or blocked items: a small dot in `--status-error` or `--status-warning` plus a text label, in your own prefixed class. Never use sakura or lacquer for a warning. `Tag` has no status variant.

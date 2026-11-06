@@ -1,0 +1,32 @@
+/* Landing page. Prefix .xlan-, tokens only. */
+.xlan-hero { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--space-4); min-height: 56vh; padding: var(--space-16) var(--gutter); text-align: center; background-color: var(--bg-canvas); color: var(--text-primary); }
+.xlan-hero h1 { max-width: 18em; }
+.xlan-by { font-size: var(--type-body-m-size); color: var(--text-secondary); }
+.xlan-idea { padding: var(--space-12) var(--gutter) var(--space-16); background-color: var(--bg-canvas); color: var(--text-primary); box-shadow: inset 0 1px 0 var(--border-subtle); }
+.xlan-idea__grid { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: var(--space-12); max-width: var(--content-max); margin-inline: auto; }
+.xlan-idea__copy { display: flex; flex-direction: column; gap: var(--space-4); }
+.xlan-idea__copy p { max-width: var(--reading-max); font-size: var(--type-body-l-size); line-height: var(--type-body-l-line); color: var(--text-secondary); }
+.xlan-get { display: flex; flex-direction: column; gap: var(--space-5); }
+.xlan-links { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+.xlan-links a { display: flex; align-items: center; min-height: var(--hit-min); font-family: var(--font-serif); font-size: var(--type-heading-4-size); font-weight: 600; color: var(--text-primary); box-shadow: inset 0 -1px 0 var(--border-subtle); }
+.xlan-zip { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-4); padding: var(--space-5); border-radius: var(--radius-md); background-color: var(--bg-surface); color: var(--text-primary); }
+.xlan-band { display: flex; flex-direction: column; gap: var(--space-2); padding: var(--space-12) max(var(--gutter), calc((100% - var(--content-max)) / 2)); background-color: var(--bg-canvas); color: var(--text-primary); }
+.xlan-band__sub { max-width: var(--reading-max); margin-bottom: var(--space-5); font-size: var(--type-body-m-size); color: var(--text-secondary); }
+.xlan-tiles { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-5); }
+.xlan-tiles--row { display: flex; gap: var(--space-5); overflow-x: auto; padding-bottom: var(--space-3); }
+.xlan-tiles--row > li { flex: 0 0 280px; }
+.xlan-tile { display: flex; flex-direction: column; width: 100%; height: 100%; padding: 0; border: 0; border-radius: var(--radius-md); overflow: hidden; background-color: var(--bg-raised); color: inherit; text-align: left; transition: transform var(--duration-base) var(--easing-settle), box-shadow var(--duration-base) var(--easing-settle); }
+.xlan-tile:hover { transform: translateY(-3px); box-shadow: var(--elevation-2); }
+.xlan-tile__img { display: block; aspect-ratio: 4 / 3; overflow: hidden; }
+.xlan-tile__img img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: top; }
+.xlan-tile__text { display: flex; flex-direction: column; gap: var(--space-1); padding: var(--space-4); }
+.xlan-tile__name { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); font-family: var(--font-serif); font-size: var(--type-heading-4-size); font-weight: 600; }
+.xlan-tile__line { font-size: var(--type-body-s-size); line-height: 1.45; color: var(--text-secondary); }
+.xlan-root .ds-sheet { width: min(50vw, 640px); min-width: min(420px, 100%); }
+.xlan-panel__line { margin-top: calc(-1 * var(--space-2)); }
+.xlan-panel__note { font-size: var(--type-body-m-size); line-height: var(--type-body-m-line); }
+.xlan-wire { display: flex; gap: var(--space-2); min-height: 220px; padding: var(--space-3); border-radius: var(--radius-md); background-color: var(--bg-raised); box-shadow: var(--elevation-1); }
+.xlan-wire__col { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: var(--space-2); }
+.xlan-wire__box { flex: 1; display: grid; place-items: center; padding: var(--space-2); border: 1px dashed var(--border-strong); border-radius: var(--radius-xs); font-size: var(--type-label-tag-size); font-weight: 700; text-align: center; color: var(--text-secondary); }
+.xlan-root .ds-sheet > .ds-btn--primary { align-self: flex-start; }
+@media (max-width: 900px) { .xlan-idea__grid { grid-template-columns: minmax(0, 1fr); gap: var(--space-8); } .xlan-tiles:not(.xlan-tiles--row) { grid-template-columns: minmax(0, 1fr); } .xlan-root .ds-sheet { width: 100%; } }

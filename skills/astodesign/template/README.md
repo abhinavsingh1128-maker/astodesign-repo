@@ -4,6 +4,8 @@
 
 **Intensity:** {{INTENSITY_LABEL}} (asked / assumed: say which)
 
+**Device:** both, desktop first (asked / assumed: say which)
+
 **Reference:** none (or: which product's structure, and what was taken)
 
 **Mode:** DERIVE | TRANSLATE | VARIANT

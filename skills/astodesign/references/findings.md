@@ -16,3 +16,11 @@ Add to this file when a layout finds something the system doesn't cover. Format:
 | 10 | Offline builds | Google Fonts blocked → Georgia | Expected; say so when reporting screenshots (rule) |
 | 11 | Tables on phones | Columns squeezed into 4-line cells | Table has a 520px min width and scrolls sideways (in system) |
 | 12 | Elevation | `--elevation-1` resolved once at :root and kept Night colours on Paper | Re-declared per surface in tokens.css (in system) |
+| 13 | Chat and reader layouts | Docs listed props the code never had (`Input density`, `Modal as`, `Avatar tone`) | Docs rewritten from source; `check-docs.mjs` guards them (in skill) |
+| 14 | Chat layouts | `Modal` did not trap Tab, and an inline `onClose` re-ran its focus effect while typing | Both fixed in `Modal` (in system) |
+| 15 | Phone screenshots | Closed `AppShell` rail leaked its shadow onto the screen | Shadow only when open (in system) |
+| 16 | Reader layouts | Cover title and byline fell below 10.5px | Both floored at 10.5px (in system) |
+| 17 | Chat layouts | `Message` actions clipped in a scrolling stream; reaction chips too small to tap | Actions sit inside the row; chips are 32px (in system) |
+| 18 | Chat layouts | `shoot.mjs` flagged overlaps with controls scrolled out of view | It now clips controls to their scroll area (in skill) |
+| 19 | Layouts with a real image | `CoverTile src` shows nothing until the image loads, and has no pigment fallback | Host images with the build, not from a third party (rule); fallback still open |
+| 20 | Popovers in layouts | `Nav` items have no dropdown or `aria-expanded` | Compose a panel beside `Nav`, anchored to the clicked button (open) |

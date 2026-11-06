@@ -29,7 +29,12 @@ await new Promise((r) => server.listen(0, r));
 const url = `http://localhost:${server.address().port}/products/${rel}/`;
 mkdirSync(outDir, { recursive: true });
 const name = rel.replace(/\//g, '-');
-const browser = await chromium.launch();
+let browser;
+try { browser = await chromium.launch(); }
+catch {
+  try { browser = await chromium.launch({ channel: 'chrome' }); console.log('Using the installed Chrome.'); }
+  catch { console.error('No browser found. Run: npx playwright install chromium'); server.close(); process.exit(2); }
+}
 let problems = 0;
 
 for (const [label, width, height] of [['desktop', 1280, 800], ['laptop', 1100, 760], ['phone', 390, 844]]) {
@@ -60,7 +65,18 @@ for (const [label, width, height] of [['desktop', 1280, 800], ['laptop', 1100, 7
       }
     }
     const ctrls = [...document.querySelectorAll('button, a[href], input, select, textarea, [role=tab], [role=radio]')].filter((e) => vis(e) && !e.closest('[aria-hidden=true], .ds-sr-only, .ds-app__sidebar:not([data-open=true])') && e.getBoundingClientRect().right > 0 && e.getBoundingClientRect().left < innerWidth);
-    const boxes = ctrls.map((e) => [e, e.getBoundingClientRect()]);
+    // A control scrolled out of its pane is not on screen: measure only the part that shows.
+    const clipped = (e) => {
+      const r = e.getBoundingClientRect(); let { left, top, right, bottom } = r;
+      for (let a = e.parentElement; a; a = a.parentElement) {
+        const s = getComputedStyle(a);
+        if (s.overflow === 'visible' && s.overflowX === 'visible' && s.overflowY === 'visible') continue;
+        const c = a.getBoundingClientRect();
+        left = Math.max(left, c.left); top = Math.max(top, c.top); right = Math.min(right, c.right); bottom = Math.min(bottom, c.bottom);
+      }
+      return { left, top, right, bottom, width: r.width, height: r.height };
+    };
+    const boxes = ctrls.map((e) => [e, clipped(e)]).filter(([, b]) => b.right > b.left && b.bottom > b.top);
     for (let i = 0; i < boxes.length; i++) {
       const [e, b] = boxes[i];
       if (phone && (b.height < 32 || b.width < 32) && !e.matches('a:not([class]), .ds-msg__thread, .ds-table__rowbtn, .ds-table__sort, .ds-tag')) out.small.push(`${desc(e)} ${Math.round(b.width)}×${Math.round(b.height)}`);

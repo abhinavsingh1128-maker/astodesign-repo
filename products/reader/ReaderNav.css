@@ -1,0 +1,24 @@
+/* Shared reader nav. Prefix .xrn-, tokens only. */
+.xrn { position: relative; z-index: var(--z-menu); }
+.xrn .ds-nav { gap: var(--space-4); }
+.xrn .ds-nav__link { white-space: nowrap; }
+.xrn-search { flex: 1 1 200px; width: 220px; min-width: 120px; }
+.xrn-icon { position: relative; display: grid; place-items: center; flex: none; width: var(--hit-min); height: var(--hit-min); padding: 0; border: 0; border-radius: var(--radius-md); background: none; color: var(--text-primary); }
+.xrn-icon:hover, .xrn-icon[aria-expanded="true"] { background: color-mix(in srgb, var(--text-primary) 10%, transparent); }
+.xrn-icon svg { width: var(--icon-l); height: var(--icon-l); fill: none; stroke: currentColor; stroke-width: var(--icon-stroke); stroke-linecap: round; stroke-linejoin: round; }
+.xrn-count { position: absolute; top: 3px; right: 2px; min-width: 16px; height: 16px; padding: 0 4px; display: grid; place-items: center; border-radius: var(--radius-full); background-color: var(--accent-sakura); color: var(--ink-900); font-size: 10.5px; font-weight: 700; }
+.xrn-panel { position: absolute; top: 100%; left: var(--xrn-x, 0); width: 360px; padding: var(--space-4); border-radius: var(--radius-md); background-color: var(--bg-surface); color: var(--text-primary); box-shadow: var(--elevation-2); }
+.xrn-panel.is-menu { width: 260px; }
+.xrn-list { list-style: none; margin: var(--space-2) 0 0; padding: 0; }
+.xrn-row { display: block; width: 100%; min-height: var(--hit-min); padding: var(--space-2); border: 0; border-radius: var(--radius-sm); background: none; color: inherit; font-size: var(--type-body-m-size); text-align: left; }
+.xrn-row:hover { background: color-mix(in srgb, var(--text-primary) 6%, transparent); }
+.xrn-row--note { display: flex; align-items: center; gap: var(--space-2); font-size: var(--type-body-s-size); }
+.xrn-row--note span:nth-child(2) { flex: 1; min-width: 0; }
+.xrn-row--note time { color: var(--text-muted); }
+@media (max-width: 900px) {
+  .xrn .ds-nav { flex-wrap: wrap; }
+  .xrn .ds-nav__end { order: 3; width: 100%; margin-left: 0; justify-content: space-between; gap: 0; }
+  .xrn-search { flex: 1 1 100%; width: 100%; margin-bottom: var(--space-1); }
+  .xrn .ds-nav__end { flex-wrap: wrap; }
+  .xrn-panel, .xrn-panel.is-menu { left: var(--space-4); right: var(--space-4); width: auto; }
+}

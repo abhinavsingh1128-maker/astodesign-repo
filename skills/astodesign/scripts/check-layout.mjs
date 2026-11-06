@@ -98,6 +98,7 @@ else {
   if (items.length < 8) err('must-keep', `${items.length} items; 8–12 required`);
   for (const l of items) {
     const names = [...l.matchAll(/`([^`]+)`/g)].map((m) => m[1]);
+    if (/^\s*-\s*\[ \]/.test(l)) { if (!/dropped:/i.test(l)) err('must-keep', `unchecked item needs "dropped:" and a reason: ${l.trim()}`); continue; }
     if (!names.length) { err('must-keep', `no component named in: ${l.trim()}`); continue; }
     for (const n of names) {
       const bare = n.replace(/^[<.]/, '').replace(/[>(].*$/, '').replace(/=.*$/, '').trim();

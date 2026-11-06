@@ -1,298 +1,182 @@
 # Components
 
-Import everything from the design system (path from a layout folder
-`products/<p>/<layout>/main.tsx`):
+Written from `design-system/components/*.tsx`. If this file and the source ever disagree, the source wins. `node skills/astodesign/scripts/check-docs.mjs` compares them.
 
-    import { Surface, Scene, Nav, Button, Tag, Avatar, Input, Card, List, ListItem, ListSection, Modal, EmptyState } from '../../../design-system';
+Import from the design system (path from `products/<p>/<layout>/main.tsx`). The checker needs this exact ending:
 
-Importing the package loads `tokens.css`, `base.css` and
-`components.css`. Class names all start with `ds-`; you can use them
-directly on plain elements when a component is too much.
+    import { Button, Input, AppShell } from '../../../design-system/components';
+
+Importing it loads all the CSS. Class names start with `ds-`, and you can use them on plain elements.
+
+# Core
 
 ## Surface
 
-    <Surface tone="night">…</Surface>                 // default page
-    <Surface tone="paper" texture>…</Surface>         // washi paper with grain
-    <Surface tone="night" backdrop>…</Surface>        // soft night-shade gradient behind dense content (no image)
+    <Surface tone="night" backdrop className="x-page">…</Surface>
+    <Surface tone="paper" as="section" id="reviews">…</Surface>
 
-Props: `tone: 'night' | 'paper'`, `texture?`, `backdrop?`, `as?`
-(`div | section | main | aside | header | footer`), plus normal HTML
-props. Nest Paper inside Night for panels, and Night inside Paper for a
-dark sidebar.
+`tone`: night | paper. `texture` (fibres, on by default). `backdrop` (Night shade behind dense content). `as`, `className`, plus HTML props.
 
 ## Scene
 
-The full illustration. One per screen, for hero/first-run moments.
+One per screen, for a hero or first run. Never behind dense UI.
 
-    <Scene nav={<Nav items={items} />} height="100svh">
-      <h1 className="ds-display-xl">Good evening, Kavya</h1>
-      <p className="ds-whisper">/Konbanwa/</p>
-      <hr className="ds-rule" />
-      <Button float>Continue reading</Button>
-    </Scene>
-    <Scene quiet height="60vh">…</Scene>   // blurred, dimmed: sign-in, empty states
+    <Scene nav={<Nav items={items} />} height="60vh" quiet>…</Scene>
 
-Children render centred in the sky. Keep sky content short: title, rule,
-one line, at most two buttons.
+`nav`, `quiet` (dims the art so text stays readable), `height`, `className`.
 
 ## Nav
 
-    <Nav items={[{ label: 'Home', href: '#', active: true }, { label: 'Shelves', href: '#s' }]}
-         end={<Avatar name="Kavya Reddy" size="s" tone="gold" />} />
+    <Nav layout="bar" brand="Shiori" items={[{ label: 'Home', href: '#', current: true }, { label: 'Stats', onClick: open }]} end={<Avatar name="Kavya Reddy" size="s" gold />} />
 
-Floating charcoal pill, centred. The active item gets a gold underline.
-It collapses to a menu button under 560px. `brand` replaces the flower
-logo; `end` is a right-hand slot. The Nav is for top-level destinations
-only (3--6). In-page switching uses tabs (see patterns).
+`layout`: pill (portfolio, up to 4 links) | bar (products). `brand`, `brandHref`, `mark`, `items`, `end`, `label`, `className`. Each item: `label`, `href` or `onClick`, `current`. Links collapse to a Menu button under 900px. There are no dropdowns: put your own panel beside it (`references/findings.md`).
 
 ## Button
 
-    <Button>Start reading</Button>                       // primary, once per view
-    <Button variant="secondary">Add to shelf</Button>    // outline
-    <Button variant="ghost">← Flip back</Button>         // text only, back/cancel/inline
-    <Button size="sm" icon={<PlusIcon/>}>New</Button>
-    <Button float href="#start">Explore now</Button>     // over the scene
+    <Button variant="primary">Start reading</Button>
+    <Button variant="secondary" size="sm" onClick={go}>Add</Button>
+    <Button variant="ghost" href="#back">← Flip back</Button>
 
-Props: `variant`, `size: 'md' | 'sm'`, `float`, `icon`, `iconEnd`,
-`href` (renders `<a>`), `disabled`. Labels are uppercase automatically.
-Keep them to 1--3 words.
+`variant`: primary | secondary (default) | ghost. `size`: md | sm. `float`, `icon` (boolean: icon-only, needs `aria-label`), `href` (renders a link), `className`, plus button props such as `disabled` and `type`. Labels are uppercase. `href` drops other button props, including `onClick`.
 
 ## Tag
 
-    <Tag>UX/UI Design</Tag>                              // solid category
-    <Tag variant="outline">Fiction</Tag>
+    <Tag>Fiction</Tag>
     <Tag variant="accent">New</Tag>
-    <Tag onClick={() => set('UX')} pressed={f === 'UX'} count={12}>UX</Tag>   // filter chip
+    <Tag onClick={toggle} pressed={on}>Fantasy</Tag>
 
-Max three on a card. Filter chips sit in a `ds-row` with `--gap: 6px`.
+`variant`: outline (default) | solid | accent (gold) | selected (lacquer). `onClick` makes it a toggle button, and `pressed` is its state. `className`. No count prop: put a count in the label.
 
 ## Avatar
 
-    <Avatar name="Kavya Reddy" />                 // initials, serif
-    <Avatar name="Me" tone="gold" size="s" />     // the current user
-    <Avatar name="Manav Jain" src={url} size="l" online />
+    <Avatar name="Kavya Reddy" size="s" gold presence="on" />
 
-Sizes `s 28`, `m 40`, `l 64`, `xl 96`.
+`name`, `src`, `size`: s 28 | m 40 | l 64 | xl 96. `gold` (the current user), `presence`: on | off, `className`.
 
 ## Input
 
     <Input label="Email" placeholder="name@company.com" hint="We reply in two days." />
-    <Input label="Email" error="Please enter a valid email." />
-    <Input label="Search" hideLabel density="compact" placeholder="Search books" />
-    <Input label="Your review" multiline rows={6} />
+    <Input label="Search" hideLabel compact value={q} onChange={(e) => setQ(e.target.value)} />
+    <Input label="Your review" compact multiline rows={6} error={err} />
 
-An underline field. The default value is set in the serif, as if written
-on paper. `density="compact"` switches to a sans value for dense tools
-(search, composer, settings). All normal input/textarea props pass
-through.
+`label` (required), `hint`, `error`, `compact` (sans value, for tools), `hideLabel`, `multiline`, `className`, plus input or textarea props. It doesn't forward a ref: to reach the field, wrap it and use `querySelector`.
 
 ## Card (always Paper)
 
-    <Card href="#" title="Piranesi" summary="Susanna Clarke · 2020" cover={{ color: '#1d5064', mark: 'Piranesi' }} tags={<Tag>Fantasy</Tag>} />
-    <Card cover={{ src: '/cover.jpg', alt: '' }} title="…" />
-    <Card variant="note" kicker="Review" title="A house of endless halls" summary="…" footer={<span className="ds-kicker">Read →</span>} />
-    <Card variant="plain" title="Pages this year" compact>…</Card>
+    <Card title="Piranesi" cover={{ color: PIGMENTS.teal, mark: 'Piranesi' }} tags={['Fantasy']} note="Susanna Clarke" href="#" />
+    <Card variant="compact" title="report.pdf" note="PDF, 4 pages" />
 
-Props:
-
--   `variant: 'project' | 'note' | 'plain'`
--   `title`, `summary`, `kicker`
--   `cover { src | color, mark }` (project only, 4:3)
--   `tags`, `footer`, `children`
--   `href | onClick`, `compact`
-
-Hover lifts 4px with Elevation 2. Put cards in a CSS grid:
-`grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: var(--space-8)`.
+`variant`: project (default) | plain | compact. `title`, `cover` (`src` or `color`, `mark`), `tags` (strings), `note`, `href` or `onClick`, `className`, `children`.
 
 ## List
 
-    <List label="Channels" density="compact">
-      <ListSection>Channels</ListSection>
-      <ListItem title="# design-crit" trailing="12" selected onClick={…} />
-      <ListItem leading={<Avatar name="Ritu Sharma" size="s" />} title="Ritu Sharma" meta="typing…" />
+    <List compact label="Channels">
+      <ListSection title="Channels">
+        <ListItem title="# design-crit" end="12" selected onClick={go} />
+        <ListItem lead={<Avatar name="Ritu Sharma" size="s" />} title="Ritu Sharma" meta="typing…" />
+      </ListSection>
     </List>
 
-`ListItem` props: `title`, `meta`, `leading`, `trailing` (string or
-`<Tag/>`), `selected` (gold left rule), `href | onClick`. Comfortable
-rows use serif titles; compact rows use sans titles. Long text
-ellipsizes.
+`List`: `compact`, `label`, `className`. `ListSection`: `title`. `ListItem`: `title`, `meta`, `lead`, `end`, `selected`, `href` or `onClick`.
 
-## Modal / Sheet (the book page)
+## Modal
 
-    <Modal open={open} onClose={close} kicker="New review" title="What did you think?"
-      actions={<><Button variant="ghost" onClick={close}>← Flip back</Button><Button>Post review</Button></>}>
-      <Input label="Your review" multiline />
+    <Modal open={open} onClose={close} title="Add a book" actions={<><Button variant="ghost" onClick={close}>Cancel</Button><Button variant="primary" onClick={save}>Save</Button></>}>
+      <Input label="Title" compact />
     </Modal>
-    <Modal as="sheet" …/>      // bottom sheet on phones
-    <Modal wide …/>            // 880px for previews
+    <Modal open={open} onClose={close} variant="sheet" title="Details">…</Modal>
 
-Esc and clicking the scrim close it, and focus moves in. The layout is
-always: kicker, serif title, short body, then ghost-left and
-primary-right actions.
+`open`, `onClose`, `title`, `actions`, `variant`: dialog (default) | wide | sheet | sheet-left, `children`. It moves focus in (to the built-in Close button, so focus your first field yourself in a form), traps Tab, closes on Esc and the scrim, and returns focus. Don't stack two: one Esc closes both, so close a sheet before opening a dialog. `actions` sits outside `children`, so its state must live in the parent. It has a built-in Close button. No `kicker`: put one in the body. A sheet has padding: to run content edge to edge, override `.ds-sheet` under your own prefix.
 
 ## EmptyState
 
-    <EmptyState title="Nothing on this shelf yet" body="Add a book and it will sit here under the moon." action={<Button size="sm">Add a book</Button>} />
+    <EmptyState title="Nothing here yet" body="Add a book." action={<Button size="sm">Add</Button>} />
 
-## Type and layout classes (no component needed)
+`title`, `body`, `action`. It shows the moon, which counts as the screen's motif.
 
-    <header className="ds-stack" style={{ '--gap': '8px' } as CSSProperties}>
-      <p className="ds-kicker">Reading challenge</p>
-      <h2 className="ds-h2">24 of 40 books</h2>
-      <p className="ds-tagline">Ahead of pace by three.</p>
-    </header>
+## Text and layout classes
 
-# App components (for products, not portfolios)
+`ds-display-xl`, `ds-display-l`, `ds-h2`, `ds-h3`, `ds-h4`, `ds-tagline`, `ds-whisper`, `ds-kicker`, `ds-label`, `ds-caption`, `ds-body-l`, `ds-body-m`, `ds-body-s`, `ds-muted`, `ds-num`, `ds-rule`, `ds-container`, `ds-stack` (`--gap`), `ds-row`, `ds-spacer`, `ds-enter`, `ds-grain`, `ds-washi`, `ds-sr-only`.
 
-These exist so layouts stop hand-building the same pieces. **Reach for
-them before writing any CSS.** All are token-only and carry the washi
-grain where they are paper or pigment.
+# App components
 
-    import { AppShell, Rail, RailSection, RailItem, Toolbar, ToolbarDivider, Segmented, Tabs, Banner,
-      Message, Mention, StreamDivider, CoverTile, PIGMENTS, pigmentFor, Ring, Bars, Progress, Table, Toast } from '../../../design-system';
+## AppShell
 
-## AppShell: the frame for any all-day tool
+    <AppShell switcher={workspaces} sidebar={<Rail label="Channels">…</Rail>} header={<h1 className="ds-h4"># design</h1>} aside={details} mainTone="paper">…</AppShell>
 
-Chat, mail, dashboards, settings, editors, admin. Night shell with
-grain; each column scrolls on its own. Sidebar becomes a slide-in sheet
-under 760px (a MENU button appears in the header); `aside` hides under
-1100px.
+`switcher`, `sidebar`, `header`, `aside`, `mainTone`: paper | night, `menuLabel`. The sidebar becomes a sheet under 760px. **`aside` is hidden at 1100px and below**, so anything in it needs another route: a `Modal variant="sheet"` is the usual one. CSS only hides the aside, so a form in both places mounts twice: check `matchMedia('(max-width: 1100px)')` and pass `aside` only when wide. The aside has no padding, and a sheet does. The header row shows whenever there is a sidebar, even if `header` is empty. It takes no `className`: wrap it in your own div to scope overrides.
 
-    <AppShell switcher={<WorkspaceButtons/>} sidebar={<Rail …/>} header={<><h1 className="ds-h3"># design</h1><Input label="Search" hideLabel density="compact"/></>}
-      aside={<DetailsPanel/>} mainTone="paper">{/* stream, table, form… */}</AppShell>
+## Rail
 
-`mainTone`: `paper` for reading/writing (chat, docs, forms, settings);
-`night` for scanning (grids, dashboards, maps).
-
-## Rail, RailSection, RailItem: side navigation
-
-Shelves, channels, folders, settings sections, filters. Gold inset bar =
-current. Unread = bold label + sakura count.
-
-    <Rail label="Channels">
-      <RailSection title="Channels" action={<button type="button">+ Add</button>}>
-        <RailItem lead="#" label="design" current onClick={…} />
-        <RailItem lead="#" label="launch-week" unread count={3} onClick={…} />
+    <Rail label="Channels" header={brand} footer={me}>
+      <RailSection title="Channels" action={<button type="button">Add</button>}>
+        <RailItem lead="#" label="design" current onClick={go} />
+        <RailItem lead="presence-on" label="Kavya Reddy" unread count={3} onClick={go} />
+        <RailItem lead={{ avatar: 'Ritu Sharma', presence: 'on' }} label="Ritu Sharma" onClick={go} />
       </RailSection>
-      <RailSection title="Direct messages"><RailItem lead="presence-on" label="Kavya Reddy" onClick={…} /></RailSection>
     </Rail>
 
-`lead`: `"#"`, an `<Avatar size="s"/>`, `"presence-on"` /
-`"presence-off"`. `count` without `unread` shows a muted number (shelf
-counts).
+`RailItem`: `lead` (# | presence-on | presence-off | `{ avatar, presence }` | a node), `label`, `current`, `unread`, `count` (hidden at 0; muted unless `unread`), `onClick` or `href`.
 
 ## Toolbar, ToolbarDivider, Segmented
 
-The row above content: search, ghost actions, view switches. Wraps on
-phones.
-
-    <Toolbar label="Shelf tools" end={<Segmented label="View" value={view} onChange={setView} options={[{value:'grid',label:'Grid'},{value:'list',label:'List'}]} />}>
-      <Input label="Search" hideLabel density="compact" placeholder="Search and add books" />
-      <Button variant="ghost" size="sm">Batch edit</Button><ToolbarDivider /><Button variant="ghost" size="sm">Print</Button>
+    <Toolbar label="Shelf tools" className="x-tools" end={<Segmented label="View" value={view} onChange={setView} options={[{ value: 'grid', label: 'Grid' }, { value: 'list', label: 'List' }]} />}>
+      <Button variant="ghost" size="sm">Edit</Button><ToolbarDivider />
     </Toolbar>
-
-`Segmented` = 2--4 exclusive options (Grid/List, Day/Week/Month,
-Delivery/Pickup). Selected = lacquer.
 
 ## Tabs
 
-    <Tabs label="Profile" value={tab} onChange={setTab} tabs={[{ value: 'shelf', label: 'Shelf', count: 24 }, { value: 'reviews', label: 'Reviews' }]} />
+    <Tabs label="Profile" value={tab} onChange={setTab} tabs={[{ value: 'shelf', label: 'Shelf', count: 24 }]} />
 
-Nav-link style, gold underline, arrow keys move. Use for sections of one
-object; use `Rail` for app-level navigation.
+Arrow keys move between tabs.
 
 ## Banner
 
-    <Banner title="Add your purchased books." onDismiss={…} action={<Button size="sm" variant="secondary">Connect</Button>}>See what you bought.</Banner>
-    <Banner tone="error" title="Payment failed.">Try another card or UPI.</Banner>
+    <Banner title="Add your books." tone="note" action={<Button size="sm">Connect</Button>} onDismiss={hide}>Details.</Banner>
 
-`tone`: `note` (promo/tip, lacquer rule), `info`, `success`, `error`
-(role=alert).
+`tone`: note | info | success | error. `title`, `action`, `onDismiss`, `children`.
 
 ## Message, Mention, StreamDivider
 
-Chat and comment streams. No bubbles; serif name, sans body (max 66ch),
-time muted. Consecutive messages from one person use `grouped`.
-
     <StreamDivider>Today</StreamDivider>
-    <Message who="Kavya Reddy" time="10:12" reactions={[{ label: '+1', count: 3 }]} onReact={toggle} thread="3 replies"
-      actions={<Button variant="ghost" size="sm">Reply</Button>}>Draft is up. <Mention>@Abhinav</Mention> can you check?</Message>
-    <Message who="Kavya Reddy" time="10:13" grouped>Also the Paper version.</Message>
-    <Message who="Abhinav Singh" time="10:20" mine attachments={<Card variant="note" compact kicker="Event" title="Design crit" summary="Tue 12:00" />}>Sure.</Message>
+    <StreamDivider tone="new">New</StreamDivider>
+    <Message who="Kavya Reddy" time="10:12" reactions={[{ label: '+1', count: 3, mine: true }]} onReact={toggle} thread={{ count: 3, last: '10:40', onOpen: open }} actions={<Button variant="ghost" size="sm">Reply</Button>} attachments={<Card variant="compact" title="a.pdf" />}>
+      Draft is up. <Mention me>Abhinav</Mention>
+    </Message>
 
-Reactions are text chips (the system has no emoji or icon set).
-Hover/focus shows actions.
+`Message`: `who`, `time`, `grouped`, `mine`, `reactions`, `onReact`, `thread`, `actions` (hover or focus only, hidden on touch), `attachments`. `Mention`: `me` makes it lacquer, and it adds the @ itself.
 
 ## CoverTile, PIGMENTS, pigmentFor
 
-Covers for books, albums, products, dishes, places, playlists: pigment +
-washi grain + serif title.
+    <CoverTile title="Piranesi" byline="Susanna Clarke" size="m" onClick={open} badge={<Tag variant="accent">Favourite</Tag>} />
 
-    <CoverTile title="Piranesi" byline="Susanna Clarke" onClick={…} />                 // 2:3 book
-    <CoverTile title="Blue Train" byline="Coltrane" ratio="1:1" pigment="teal" />      // album / product
-    <CoverTile title="Paneer tikka bowl" byline="₹209" ratio="4:3" badge={<Tag variant="accent">Bestseller</Tag>} />
-
-Pigment defaults to `pigmentFor(title)` (stable per item). `selected` =
-lacquer outline (batch select). Badges sit at the top, title under them,
-byline at the bottom. On Night each cover gets a hairline edge so teal
-covers don\'t vanish into the page. Pass `src` for a real image. Never
-invent other colours; `PIGMENTS` has the six.
+`title`, `byline`, `ratio`: 2:3 | 1:1 | 4:3, `pigment`, `src`, `badge`, `selected`, `onClick`, `size`: s 72 | m 120 | l 180. With `src`, the title isn't drawn, and nothing shows until the image loads. The badge can cover the title: prefer putting it in the Paper block below. Width is fixed by size, or set `--w` under your prefix.
 
 ## Ring, Bars, Progress
 
-    <Ring value={8} max={24} label="2026 reading challenge" />                        // the moon
-    <Bars label="Books per month" data={[{ label: 'J', value: 1 }, …, { label: 'N', value: 2, current: true }]} />
-    <Progress value={212} max={607} label="Reading progress" />
+    <Ring value={8} max={24} label="2026 challenge" size={140} />
+    <Bars label="Books per month" height={120} data={[{ label: 'J', value: 1 }, { label: 'N', value: 2, current: true }]} />
+    <Progress value={212} max={607} label="Reading progress" showLabel />
 
-Bars include a screen-reader table. For anything more complex (lines,
-stacked), follow `patterns.md` → Monitor and keep the same colours: gold
-series, sakura for \"now\", hairline axes.
+`Ring` also takes `children` for its centre. Its default number is 38px, so pass your own at sizes under about 100. `Bars` takes `format`.
 
 ## Table
 
-    <Table caption="Your order" showCaption rowKey={(r) => r.id} rows={rows} sort={sort} onSort={setSortKey} onRowClick={open} selectedKey={id}
-      columns={[{ key: 'item', label: 'Item' }, { key: 'qty', label: 'Qty', numeric: true }, { key: 'price', label: 'Price', numeric: true, render: (r) => `₹${r.price}` }]} />
+    <Table caption="Your order" showCaption density="compact" rowKey={(r) => r.id} rows={rows} sort={{ key: 'qty', dir: 'asc' }} onSort={setKey} onRowClick={open} selectedKey={id}
+      columns={[{ key: 'item', label: 'Item' }, { key: 'qty', label: 'Qty', numeric: true, render: (r) => r.qty }]} />
 
-Paper with grain, uppercase headers, tabular numbers, gold bar on the
-selected row, scrolls sideways inside itself on phones.
+Columns: `key`, `label`, `numeric`, `sortable`, `render`, `width`. A column with no `render` prints `row[key]`. `onSort` gets only the key, so flip `dir` yourself. It has `--elevation-2` at rest, and a 520px minimum width that scrolls sideways on phones: for a work queue, drop columns and set `min-width: 0` under your prefix.
 
 ## Toast
 
-    {toast && <Toast onDone={() => setToast(null)}>Added to cart</Toast>}
+    {toast && <Toast onDone={clear} action={<Button variant="ghost" size="sm" onClick={undo}>Undo</Button>}>Added</Toast>}
 
-## Nav: `layout="bar"` for products
+`onDone`, `action`, `duration` (default 4000). `onDone` can be inline.
 
-    <Nav layout="bar" brand="Shiori" items={[{ label: 'Home', href: '#' }, { label: 'My Books', href: '#', active: true }, …]}
-      end={<><Input label="Search" hideLabel density="compact" placeholder="Title, author, ISBN" /><Avatar name="Abhinav Singh" size="s" tone="gold" /></>} />
+## Book, Spread, Page
 
-The default (pill) is the portfolio\'s centred menu for up to 4 links.
-`bar` puts the brand left, the links next to it and `end` on the right
-in normal flow, so search and actions never collide with the links;
-under 900px the links collapse into the menu button.
+    <Book index={i} onIndexChange={setI} contents backLabel="← Flip back" nextLabel="Next →">
+      <Spread title="Reading now" left={<Page side="left" kicker="Chapter one" folio={1}>…</Page>} right={<Page side="right" folio={2}>…</Page>} />
+    </Book>
 
-## Modal without a primary action
-
-Read-only modals (stats, details) pass
-`actions={<Button variant="ghost" onClick={close}>Close</Button>}` or no
-`actions` at all.
-
-
-## Book, Spread, Page (the book and page display)
-
-```tsx
-<Book contents backLabel="← Flip back" nextLabel="Next →">
-  <Spread title="Reading now" left={<Page side="left" kicker="Chapter one" folio={1}>…</Page>} right={<Page side="right" folio={2}>…</Page>} />
-</Book>
-```
-
-`Book` props:
-- `index` / `onIndexChange` (controlled, optional)
-- `contents` (chapter tabs, default on)
-- `backLabel`, `nextLabel`
-
-`Page` props:
-- `side`
-- `kicker` (running head)
-- `folio` (page number)
-
-Paper with washi fibres and the gutter shadow are built in. On phones it shows one page at a time. When to use it and when not to: `references/book.md`.
+When to use it: `references/book.md`. On phones it shows both pages stacked or one at a time depending on width, so check your screenshot.

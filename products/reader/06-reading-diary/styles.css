@@ -1,0 +1,27 @@
+/* Reader 06: reading diary. Prefix .xre06-, tokens only. */
+.xre06-page { min-height: 100vh; }
+.xre06-grid { display: grid; grid-template-columns: 280px minmax(0, 1fr); gap: var(--space-8); align-items: start; padding-block: var(--space-6) var(--space-12); }
+.xre06-side { position: sticky; top: var(--space-4); display: flex; flex-direction: column; gap: var(--space-4); }
+.xre06-me { display: flex; align-items: center; gap: var(--space-3); }
+.xre06-ring { display: flex; flex-direction: column; align-items: center; gap: var(--space-2); text-align: center; }
+.xre06-years, .xre06-months { display: flex; flex-wrap: wrap; gap: var(--space-1); }
+.xre06-book { display: flex; flex-direction: column; gap: var(--space-6); padding: var(--space-8); border-radius: var(--radius-md); background-color: var(--bg-surface); color: var(--text-primary); min-width: 0; }
+.xre06-today { display: flex; flex-direction: column; gap: var(--space-2); padding-bottom: var(--space-6); box-shadow: inset 0 -1px 0 var(--border-strong); }
+.xre06-now { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--space-4); }
+.xre06-name { font-family: var(--font-serif); font-size: var(--type-heading-4-size); font-weight: 600; line-height: 1.2; }
+.xre06-note { font-family: var(--font-serif); font-style: italic; font-size: var(--type-heading-4-size); }
+.xre06-add { display: flex; align-items: flex-end; gap: var(--space-3); }
+.xre06-add > :first-child { flex: 1; }
+.xre06-month { display: flex; flex-direction: column; gap: var(--space-4); }
+.xre06-entry { display: flex; gap: var(--space-4); }
+.xre06-entry > div:last-child { flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-1); }
+.xre06-entry .ds-cover { --w: 84px; }
+.xre06-review { max-width: var(--reading-max); font-size: var(--type-body-m-size); line-height: var(--type-body-m-line); }
+.xre06-empty { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-3); }
+.xre06-next { display: flex; flex-direction: column; gap: var(--space-3); scroll-margin-top: var(--space-4); }
+.xre06-covers { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, 120px); justify-content: space-between; gap: var(--space-4); }
+@media (max-width: 900px) {
+  .xre06-grid { grid-template-columns: minmax(0, 1fr); }
+  .xre06-side { position: static; }
+  .xre06-book { padding: var(--space-4); }
+}
