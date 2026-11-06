@@ -1,6 +1,6 @@
 # Chat 05: people first
 
-**Idea:** You go to a person, not a channel, and see everything you share with them
+**Idea:** You go to a person: your personal chat opens first, and any thread with them opens beside it
 
 **Intensity:** Medium (assumed: not set in this request; the default)
 
@@ -14,29 +14,25 @@
 
 | Region | Objects | Actions | States |
 | --- | --- | --- | --- |
-| People with presence and unread | sample data | see Must-keep | |
-| Find a person | sample data | see Must-keep | |
-| Channels still reachable | sample data | see Must-keep | |
-| Everything shared with one person | sample data | see Must-keep | |
-| Grouped by place | sample data | see Must-keep | |
-| Filter by shared place | sample data | see Must-keep | |
-| Waiting-on-you notice | sample data | see Must-keep | |
-| Composer to that person | sample data | see Must-keep | |
-| Files from this person | sample data | see Must-keep | |
-| Empty place offers the fix | sample data | see Must-keep | |
+| Rail | people, search, channels | switch person, open a channel | current, unread, presence |
+| Header | person, presence | Threads button at 1100px and below | |
+| Main | waiting notice, personal chat, composer | send, format, attach, open a thread | first-message state |
+| Aside or sheet | Personal and group filters, thread list, or one open thread with replies and composer | open, back, reply | new count |
 
 ## Must-keep
 
 - [x] People with presence and unread — `RailItem`
 - [x] Find a person — `Find a person`
-- [x] Channels still reachable — `RailSection`
-- [x] Everything shared with one person — `shared`
-- [x] Grouped by place — `StreamDivider`
-- [x] Filter by shared place — `Tag`
+- [x] Channels below the people, each opening its chat — `goChan`
+- [x] Close and reopen the left panel — `railOpen`
+- [x] Personal chat is the default — `personal`
+- [x] Threads with this person in one panel — `xch05-threads`
+- [x] A thread opens beside the chat — `xch05-thread`, `openThread`
+- [x] Threads in personal messages open too — `threadFor`
+- [x] Personal and group filters in the Threads panel — `xch05-filter`, `setPlace`
 - [x] Waiting-on-you notice — `Banner`
-- [x] Composer to that person — `Composer`
-- [x] Files from this person — `xch05-files`
-- [x] Empty place offers the fix — `EmptyState`
+- [x] Composer with formatting and attach — `Composer`
+- [x] First message state — `EmptyState`
 
 ## Translation
 
@@ -60,7 +56,7 @@ Night: rail. Paper: main column, aside, sheets.
 
 ## Gives up
 
-Weak for broadcast channels and topics nobody owns. Following a whole channel means leaving the main model. Sending always goes to a direct conversation.
+Weak for broadcast channels and topics nobody owns. Following a whole channel means leaving the main model. You cannot read a whole group here, only the threads this person is in. Personal threads use sample replies written for this layout.
 
 ## System tension
 
