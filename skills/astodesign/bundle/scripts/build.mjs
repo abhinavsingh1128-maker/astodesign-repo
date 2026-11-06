@@ -27,13 +27,14 @@ function findPages(dir) {
 const args = process.argv.slice(2);
 const pages = args.length
   ? args.flatMap((a) => findPages(resolve(root, a)))
-  : ['design-system/gallery', 'examples', 'products'].flatMap((d) => findPages(join(root, d)));
+  : ['landing', 'design-system/gallery', 'examples', 'products'].flatMap((d) => findPages(join(root, d)));
 if (!pages.length) { console.error('No pages found (a page is a folder with index.html and main.tsx).'); process.exit(1); }
 
 let failed = 0;
 for (const page of pages) {
   const rel = relative(root, page);
-  const out = join(root, 'dist', rel);
+  // The landing page is the site root.
+  const out = rel === 'landing' ? join(root, 'dist') : join(root, 'dist', rel);
   mkdirSync(out, { recursive: true });
   try {
     await esbuild.build({

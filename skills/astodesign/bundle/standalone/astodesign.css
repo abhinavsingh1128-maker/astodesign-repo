@@ -1252,10 +1252,11 @@ a.ds-list-item:hover {
     z-index: var(--z-menu);
     transform: translateX(-102%);
     transition: transform var(--duration-base) var(--easing-settle);
-    box-shadow: var(--elevation-4);
+    box-shadow: none;
   }
   .ds-app__sidebar[data-open=true] {
     transform: none;
+    box-shadow: var(--elevation-4);
   }
   .ds-app__scrim {
     display: block;
@@ -1599,7 +1600,7 @@ a.ds-list-item:hover {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  min-height: 28px;
+  min-height: 32px;
   padding: 0 var(--space-2);
   border-radius: var(--radius-full);
   border: 1px solid var(--border-subtle);
@@ -1630,7 +1631,7 @@ a.ds-list-item:hover {
 }
 .ds-msg__actions {
   position: absolute;
-  top: -14px;
+  top: var(--space-1);
   right: var(--space-6);
   display: flex;
   gap: 2px;
@@ -1748,7 +1749,7 @@ a.ds-list-item:hover {
 .ds-cover__title {
   font-family: var(--font-serif);
   font-weight: 700;
-  font-size: calc(var(--w) * .13);
+  font-size: max(10.5px, calc(var(--w) * .13));
   line-height: 1.05;
   text-wrap: balance;
   overflow: hidden;
@@ -1757,7 +1758,7 @@ a.ds-list-item:hover {
   -webkit-box-orient: vertical;
 }
 .ds-cover__byline {
-  font-size: max(9px, calc(var(--w) * .075));
+  font-size: max(10.5px, calc(var(--w) * .075));
   letter-spacing: .08em;
   text-transform: uppercase;
   font-weight: 700;
@@ -2122,42 +2123,63 @@ a.ds-list-item:hover {
 .ds-book__foot--right {
   right: var(--space-10);
 }
-.ds-book__spread.is-fwd .ds-page--right {
-  transform-origin: left center;
-  animation: ds-leaf-in-r 800ms var(--easing-turn) both;
+.ds-book__leaf {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 50%;
+  z-index: 5;
+  transform-style: preserve-3d;
+  pointer-events: none;
+  transition: transform 900ms cubic-bezier(.5, .06, .28, 1);
 }
-.ds-book__spread.is-back .ds-page--left {
-  transform-origin: right center;
-  animation: ds-leaf-in-l 800ms var(--easing-turn) both;
+.ds-book__leaf.is-fwd {
+  left: 50%;
+  transform-origin: 0 50%;
 }
-.ds-book__spread.is-turning .ds-page::after {
+.ds-book__leaf.is-bwd {
+  left: 0;
+  transform-origin: 100% 50%;
+}
+.ds-book__leaf.is-fwd.is-go {
+  transform: rotateY(-180deg);
+}
+.ds-book__leaf.is-bwd.is-go {
+  transform: rotateY(180deg);
+}
+.ds-book__face {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  overflow: hidden;
+}
+.ds-book__face--back {
+  transform: rotateY(180deg);
+}
+.ds-book__face .ds-page {
+  overflow: hidden;
+}
+.ds-book__face::after {
   content: "";
   position: absolute;
   inset: 0;
   pointer-events: none;
   opacity: 0;
-  animation: ds-leaf-shade 900ms ease;
   background:
     linear-gradient(
       90deg,
       rgba(60, 40, 20, .28),
       rgba(60, 40, 20, 0) 40%);
+  animation: ds-leaf-shade 900ms ease;
 }
-@keyframes ds-leaf-in-r {
-  from {
-    transform: rotateY(-100deg);
-  }
-  to {
-    transform: none;
-  }
-}
-@keyframes ds-leaf-in-l {
-  from {
-    transform: rotateY(100deg);
-  }
-  to {
-    transform: none;
-  }
+.ds-book__leaf.is-bwd .ds-book__face::after {
+  background:
+    linear-gradient(
+      270deg,
+      rgba(60, 40, 20, .28),
+      rgba(60, 40, 20, 0) 40%);
 }
 @keyframes ds-leaf-shade {
   50% {
@@ -2190,9 +2212,11 @@ a.ds-list-item:hover {
   .ds-page--left {
     border-radius: var(--radius-md) var(--radius-md) 0 0;
   }
-  .ds-book__spread.is-turning .ds-page {
+  .ds-book__leaf {
+    display: none;
+  }
+  .ds-book__spread.is-turning > .ds-page {
     animation: ds-fade var(--duration-enter) var(--easing-standard) both;
-    transform: none;
   }
   .ds-book__foot--left,
   .ds-book__foot--right {
@@ -2206,9 +2230,11 @@ a.ds-list-item:hover {
   }
 }
 @media (prefers-reduced-motion: reduce) {
+  .ds-book__leaf {
+    display: none;
+  }
   .ds-book__spread.is-turning .ds-page {
     animation: none !important;
-    transform: none !important;
   }
 }
 @keyframes ds-fade {

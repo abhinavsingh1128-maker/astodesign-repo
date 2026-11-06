@@ -28,13 +28,17 @@
 .ds-book__foot--left  { left: var(--space-10); }
 .ds-book__foot--right { right: var(--space-10); }
 
-/* the leaf turn: the incoming page swings in from the spine with a shade sweep */
-.ds-book__spread.is-fwd  .ds-page--right { transform-origin: left center;  animation: ds-leaf-in-r 800ms var(--easing-turn) both; }
-.ds-book__spread.is-back .ds-page--left  { transform-origin: right center; animation: ds-leaf-in-l 800ms var(--easing-turn) both; }
-.ds-book__spread.is-turning .ds-page::after { content: ""; position: absolute; inset: 0; pointer-events: none; opacity: 0; animation: ds-leaf-shade 900ms ease;
-  background: linear-gradient(90deg, rgba(60, 40, 20, .28), rgba(60, 40, 20, 0) 40%); }
-@keyframes ds-leaf-in-r { from { transform: rotateY(-100deg); } to { transform: none; } }
-@keyframes ds-leaf-in-l { from { transform: rotateY(100deg); } to { transform: none; } }
+/* the leaf turn, from astodesign.com: one page, printed both sides, swings over the spine */
+.ds-book__leaf { position: absolute; top: 0; bottom: 0; width: 50%; z-index: 5; transform-style: preserve-3d; pointer-events: none; transition: transform 900ms cubic-bezier(.5, .06, .28, 1); }
+.ds-book__leaf.is-fwd { left: 50%; transform-origin: 0 50%; }
+.ds-book__leaf.is-bwd { left: 0; transform-origin: 100% 50%; }
+.ds-book__leaf.is-fwd.is-go { transform: rotateY(-180deg); }
+.ds-book__leaf.is-bwd.is-go { transform: rotateY(180deg); }
+.ds-book__face { position: absolute; inset: 0; display: grid; backface-visibility: hidden; -webkit-backface-visibility: hidden; overflow: hidden; }
+.ds-book__face--back { transform: rotateY(180deg); }
+.ds-book__face .ds-page { overflow: hidden; }
+.ds-book__face::after { content: ""; position: absolute; inset: 0; pointer-events: none; opacity: 0; background: linear-gradient(90deg, rgba(60, 40, 20, .28), rgba(60, 40, 20, 0) 40%); animation: ds-leaf-shade 900ms ease; }
+.ds-book__leaf.is-bwd .ds-book__face::after { background: linear-gradient(270deg, rgba(60, 40, 20, .28), rgba(60, 40, 20, 0) 40%); }
 @keyframes ds-leaf-shade { 50% { opacity: 1; } }
 
 /* phones: one page at a time, stacked, the turn becomes a fade */
@@ -45,12 +49,14 @@
   .ds-page--left, .ds-page--right { border-radius: var(--radius-md); box-shadow: none; padding: var(--space-6) var(--space-5) var(--space-12); }
   .ds-page--right { border-top: 2px dashed rgba(90, 70, 50, .25); border-radius: 0 0 var(--radius-md) var(--radius-md); }
   .ds-page--left { border-radius: var(--radius-md) var(--radius-md) 0 0; }
-  .ds-book__spread.is-turning .ds-page { animation: ds-fade var(--duration-enter) var(--easing-standard) both; transform: none; }
+  .ds-book__leaf { display: none; }
+  .ds-book__spread.is-turning > .ds-page { animation: ds-fade var(--duration-enter) var(--easing-standard) both; }
   .ds-book__foot--left, .ds-book__foot--right { bottom: var(--space-4); }
   .ds-book__foot--left { left: var(--space-5); }
   .ds-book__foot--right { right: var(--space-5); }
 }
 @media (prefers-reduced-motion: reduce) {
-  .ds-book__spread.is-turning .ds-page { animation: none !important; transform: none !important; }
+  .ds-book__leaf { display: none; }
+  .ds-book__spread.is-turning .ds-page { animation: none !important; }
 }
 @keyframes ds-fade { from { opacity: 0; } }

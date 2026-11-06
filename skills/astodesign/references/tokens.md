@@ -49,7 +49,8 @@ Variables: `--type-<name>-size/-line/-weight/-tracking`.
 ## Space, radius, elevation, motion, layout
 
 - Space: `--space-0,1,2,3,4,5,6,8,10,12,16,24` = 0, 4, 8, 12, 16, 20, 24, 32, 40, 48, 64, 96px.
-- Radius: `--radius-none 0, xs 2, sm 3, md 4, lg 6, xl 14, full 999`. Round (full) only for avatars, rings, dots, count badges, pills (buttons, segmented).
+- Radius: `--radius-none 0, xs 2, sm 3, md 4, lg 6, xl 14, full 999`. Layout blocks stay almost square. Round (full) is for avatars, rings, dots, count badges, buttons, segmented and toast; `xl` is for modals.
+- `--white` is the text colour on lacquer.
 - Elevation: `--elevation-1` hairline (inset), `-2` lift (hover / cards), `-3` float (nav pill, floating button), `-4` book / modal / sheet.
 - Duration: `--duration-instant 120, fast 200, base 350, enter 450, turn 800, slow 1000, scene 1200, sway 7000` (ms). Easing: `--easing-standard`, `--easing-settle` (things arriving), `--easing-turn` (page turn), `--easing-sway`. Reduced motion zeroes them.
 - Layout: `--content-max 1280px`, `--reading-max 66ch`, `--gutter clamp(16px, 4vw, 64px)`, `--hit-min 44px`, `--z-base/scene/content/sticky/menu/overlay/toast`, `--icon-s/m/l` (16/20/24), `--icon-stroke 1.6`.
