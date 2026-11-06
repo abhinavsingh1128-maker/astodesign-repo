@@ -25,7 +25,7 @@ export function AppShell({ switcher, sidebar, header, aside, mainTone = 'paper',
     return () => document.removeEventListener('keydown', onKey);
   }, [open]);
   return (
-    <div className={cx('ds-app', switcher && 'ds-app--switcher', aside && 'ds-app--aside')} data-surface="night">
+    <div className={cx('ds-app ds-washi', switcher && 'ds-app--switcher', aside && 'ds-app--aside')} data-surface="night">
       {switcher && <div className="ds-app__switcher ds-washi-night">{switcher}</div>}
       {sidebar && (
         <div className="ds-app__sidebar ds-washi-night" data-open={open} onClick={(e) => { if ((e.target as HTMLElement).closest('button, a')) setOpen(false); }}>

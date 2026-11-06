@@ -36,7 +36,7 @@ button.ds-tag:hover { border-color: var(--border-strong); color: var(--text-prim
 .ds-avatar {
   --size: 36px; position: relative; flex: none; width: var(--size); height: var(--size); border-radius: var(--radius-full);
   display: inline-grid; place-items: center; background: var(--pigment, var(--night-500)); color: var(--paper-200);
-  font-family: var(--font-serif); font-weight: 600; font-size: calc(var(--size) * .42); line-height: 1;
+  font-family: var(--font-serif); font-weight: 600; font-size: max(11px, calc(var(--size) * .42)); line-height: 1;
 }
 .ds-avatar img { width: 100%; height: 100%; border-radius: inherit; object-fit: cover; }
 .ds-avatar--s { --size: 24px; } .ds-avatar--m { --size: 36px; } .ds-avatar--l { --size: 56px; } .ds-avatar--xl { --size: 96px; }
