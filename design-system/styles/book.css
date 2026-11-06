@@ -1,0 +1,56 @@
+/* Book and page display. Values copied from astodesign.com's diary pages; colours via tokens. */
+.ds-book { display: flex; flex-direction: column; gap: var(--space-4); width: 100%; max-width: 1120px; margin-inline: auto; }
+
+.ds-book__contents { display: flex; flex-wrap: wrap; gap: var(--space-5); justify-content: center; }
+.ds-book__chapter { padding: 10px 0 8px; background: none; border: 0; cursor: pointer; color: var(--text-secondary);
+  font: 700 var(--type-label-nav-size)/1 var(--font-sans); letter-spacing: var(--type-label-nav-tracking); text-transform: uppercase;
+  box-shadow: inset 0 -2px 0 transparent; transition: color var(--duration-fast) var(--easing-standard), box-shadow var(--duration-fast) var(--easing-standard); }
+.ds-book__chapter:hover { color: var(--text-primary); }
+.ds-book__chapter[aria-current="page"] { color: var(--text-primary); box-shadow: inset 0 -2px 0 var(--accent-gold); }
+
+.ds-book__spread { position: relative; display: grid; grid-template-columns: 1fr 1fr; min-height: min(78vh, 720px);
+  border-radius: var(--radius-md); box-shadow: var(--elevation-4); perspective: 2200px; }
+.ds-book__spine { position: absolute; z-index: 3; left: 50%; top: 0; bottom: 0; width: 2px; margin-left: -1px; pointer-events: none;
+  background: linear-gradient(rgba(60, 40, 20, .25), rgba(60, 40, 20, .45), rgba(60, 40, 20, .25)); }
+
+.ds-page { position: relative; display: flex; flex-direction: column; gap: var(--space-3); min-width: 0; overflow: auto;
+  padding: var(--space-8) var(--space-10) var(--space-16); background-color: var(--bg-canvas); color: var(--text-primary); }
+.ds-page--left  { border-radius: var(--radius-md) 0 0 var(--radius-md); box-shadow: inset -26px 0 30px -18px rgba(70, 50, 30, .35); }
+.ds-page--right { border-radius: 0 var(--radius-md) var(--radius-md) 0; box-shadow: inset 26px 0 30px -18px rgba(70, 50, 30, .35); }
+.ds-page__head { margin-bottom: var(--space-2); }
+.ds-page__body { display: flex; flex-direction: column; gap: var(--space-4); }
+.ds-page__folio { position: absolute; bottom: var(--space-5); font: italic 600 var(--type-whisper-size)/1 var(--font-serif); color: var(--text-muted); }
+.ds-page--left .ds-page__folio { left: var(--space-10); }
+.ds-page--right .ds-page__folio { right: var(--space-10); }
+
+.ds-book__foot { position: absolute; z-index: 4; bottom: var(--space-3); }
+.ds-book__foot { bottom: var(--space-12); background: none !important; }
+.ds-book__foot--left  { left: var(--space-10); }
+.ds-book__foot--right { right: var(--space-10); }
+
+/* the leaf turn: the incoming page swings in from the spine with a shade sweep */
+.ds-book__spread.is-fwd  .ds-page--right { transform-origin: left center;  animation: ds-leaf-in-r 800ms var(--easing-turn) both; }
+.ds-book__spread.is-back .ds-page--left  { transform-origin: right center; animation: ds-leaf-in-l 800ms var(--easing-turn) both; }
+.ds-book__spread.is-turning .ds-page::after { content: ""; position: absolute; inset: 0; pointer-events: none; opacity: 0; animation: ds-leaf-shade 900ms ease;
+  background: linear-gradient(90deg, rgba(60, 40, 20, .28), rgba(60, 40, 20, 0) 40%); }
+@keyframes ds-leaf-in-r { from { transform: rotateY(-100deg); } to { transform: none; } }
+@keyframes ds-leaf-in-l { from { transform: rotateY(100deg); } to { transform: none; } }
+@keyframes ds-leaf-shade { 50% { opacity: 1; } }
+
+/* phones: one page at a time, stacked, the turn becomes a fade */
+@media (max-width: 900px) {
+  .ds-book__spread { grid-template-columns: 1fr; min-height: 0; box-shadow: var(--elevation-2); }
+  .ds-book__spine, .ds-page__folio { display: none; }
+  .ds-page--left { padding-bottom: var(--space-6); }
+  .ds-page--left, .ds-page--right { border-radius: var(--radius-md); box-shadow: none; padding: var(--space-6) var(--space-5) var(--space-12); }
+  .ds-page--right { border-top: 2px dashed rgba(90, 70, 50, .25); border-radius: 0 0 var(--radius-md) var(--radius-md); }
+  .ds-page--left { border-radius: var(--radius-md) var(--radius-md) 0 0; }
+  .ds-book__spread.is-turning .ds-page { animation: ds-fade var(--duration-enter) var(--easing-standard) both; transform: none; }
+  .ds-book__foot--left, .ds-book__foot--right { bottom: var(--space-4); }
+  .ds-book__foot--left { left: var(--space-5); }
+  .ds-book__foot--right { right: var(--space-5); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ds-book__spread.is-turning .ds-page { animation: none !important; transform: none !important; }
+}
+@keyframes ds-fade { from { opacity: 0; } }

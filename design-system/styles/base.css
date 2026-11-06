@@ -1,0 +1,60 @@
+/* Astodesign base: reset, surfaces, type classes, layout helpers, motion, texture hooks.
+   Import order: fonts.css, tokens.css, base.css, components.css, app.css, washi.css, book.css (index.css does this). */
+
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+body { margin: 0; min-height: 100vh; font-family: var(--font-sans); font-size: var(--type-body-m-size); line-height: var(--type-body-m-line); -webkit-font-smoothing: antialiased; }
+img, svg, video { display: block; max-width: 100%; }
+button, input, textarea, select { font: inherit; color: inherit; }
+button { cursor: pointer; }
+h1, h2, h3, h4, h5, h6, p, figure, blockquote, ul, ol { margin: 0; }
+ul[class], ol[class] { list-style: none; padding: 0; }
+a { color: inherit; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+::selection { background: var(--accent-gold); color: var(--ink-900); }
+
+/* Surfaces: Night is the painted scene and shells, Paper is the page. */
+[data-surface] { background-color: var(--bg-canvas); color: var(--text-primary); }
+[data-surface="paper"] { --grain-opacity: .5; }
+
+/* Grain for coloured blocks (covers, avatars, filled chips, bars): the portfolio never shows a flat fill. */
+.ds-grain { position: relative; isolation: isolate; }
+.ds-grain::after {
+  content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; z-index: 0;
+  background-image: url("../assets/washi-paper.webp"); background-size: 256px; mix-blend-mode: multiply; opacity: .55;
+}
+.ds-grain > * { position: relative; z-index: 1; }
+
+/* Type */
+.ds-display-xl, .ds-display-l, .ds-h2, .ds-h3, .ds-h4, .ds-tagline, .ds-whisper { font-family: var(--font-serif); text-wrap: balance; }
+.ds-display-xl { font-size: var(--type-display-xl-size); line-height: var(--type-display-xl-line); font-weight: var(--type-display-xl-weight); letter-spacing: -.01em; }
+.ds-display-l { font-size: var(--type-display-l-size); line-height: var(--type-display-l-line); font-weight: var(--type-display-l-weight); }
+.ds-h2 { font-size: var(--type-heading-2-size); line-height: var(--type-heading-2-line); font-weight: var(--type-heading-2-weight); }
+.ds-h3 { font-size: var(--type-heading-3-size); line-height: var(--type-heading-3-line); font-weight: var(--type-heading-3-weight); }
+.ds-h4 { font-size: var(--type-heading-4-size); line-height: var(--type-heading-4-line); font-weight: var(--type-heading-4-weight); }
+.ds-tagline { font-size: var(--type-tagline-size); line-height: var(--type-tagline-line); font-weight: var(--type-tagline-weight); font-style: italic; }
+.ds-whisper { font-size: var(--type-whisper-size); line-height: var(--type-whisper-line); font-weight: var(--type-whisper-weight); font-style: italic; letter-spacing: var(--type-whisper-tracking); color: var(--text-secondary); }
+.ds-body-l { font-size: var(--type-body-l-size); line-height: var(--type-body-l-line); }
+.ds-body-m { font-size: var(--type-body-m-size); line-height: var(--type-body-m-line); }
+.ds-body-s { font-size: var(--type-body-s-size); line-height: var(--type-body-s-line); }
+.ds-caption { font-size: var(--type-caption-size); line-height: var(--type-caption-line); color: var(--text-secondary); }
+.ds-kicker, .ds-label { font-family: var(--font-sans); font-weight: 700; text-transform: uppercase; }
+.ds-kicker { font-size: var(--type-label-kicker-size); letter-spacing: var(--type-label-kicker-tracking); line-height: 1.2; color: var(--text-accent); }
+.ds-label { font-size: var(--type-label-field-size); letter-spacing: var(--type-label-field-tracking); line-height: 1.2; color: var(--text-secondary); }
+.ds-muted { color: var(--text-secondary); }
+.ds-accent { color: var(--text-accent); }
+.ds-num { font-variant-numeric: tabular-nums; }
+.ds-rule { border: 0; height: 1px; background: var(--border-subtle); margin: var(--space-6) 0; }
+.ds-reading { max-width: var(--reading-max); }
+
+/* Layout */
+.ds-container { width: 100%; max-width: var(--content-max); margin-inline: auto; padding-inline: var(--gutter); }
+.ds-stack { display: flex; flex-direction: column; gap: var(--gap, var(--space-4)); }
+.ds-row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--gap, var(--space-3)); }
+.ds-spacer { flex: 1; }
+
+/* Motion: things settle in, they do not bounce. */
+@keyframes ds-enter { from { opacity: 0; transform: translateY(var(--enter-distance)); } to { opacity: 1; transform: none; } }
+.ds-enter { animation: ds-enter var(--duration-enter) var(--easing-settle) both; animation-delay: calc(var(--i, 0) * 60ms); }
+
+.ds-sr-only { position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
