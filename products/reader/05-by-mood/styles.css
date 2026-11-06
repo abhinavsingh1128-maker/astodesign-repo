@@ -1,0 +1,26 @@
+/* Reader 05: by mood. Prefix .xre05-, tokens only. */
+.xre05-page { display: flex; flex-direction: column; gap: var(--space-6); padding: var(--space-6) var(--space-8) var(--space-10); max-width: 980px; width: 100%; }
+.xre05-intro { display: flex; flex-direction: column; gap: var(--space-2); }
+.xre05-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--space-5); }
+.xre05-row { display: grid; grid-template-columns: minmax(0, 1fr) 260px; gap: var(--space-6); padding: var(--space-6); background-color: var(--bg-raised); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); box-shadow: var(--elevation-1); scroll-margin: var(--space-16); }
+.xre05-row.is-pick { box-shadow: inset 3px 0 0 var(--accent-gold), var(--elevation-1); }
+.xre05-pick { color: var(--text-accent); }
+.xre05-row__quote { display: flex; flex-direction: column; gap: var(--space-3); }
+.xre05-row__quote .ds-btn { align-self: flex-start; }
+.xre05-row__quote blockquote { margin: 0; animation: xre05-fade var(--duration-base) var(--easing-settle); }
+.xre05-row__quote blockquote p { margin: 0; font-size: var(--type-body-l-size); line-height: 1.6; }
+.xre05-row__quote blockquote p.is-short { font-size: var(--type-heading-3-size); line-height: 1.35; }
+.xre05-row__book { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: var(--space-3) var(--space-4); align-content: start; padding-left: var(--space-6); border-left: 1px solid var(--border-subtle); }
+.xre05-row__book .ds-cover { --w: 88px; }
+.xre05-row__hook { grid-column: 1 / -1; margin: 0; }
+.xre05-row__book > .ds-btn { grid-column: 1 / -1; justify-self: start; }
+.xre05-row__book .ds-cover__byline { display: none; }
+.xre05-row__meta { display: flex; flex-direction: column; gap: var(--space-1); min-width: 0; }
+.xre05-aside { padding: var(--space-5); }
+@keyframes xre05-fade { from { opacity: 0; } to { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .xre05-row__quote blockquote { animation: none; } }
+@media (max-width: 900px) {
+  .xre05-page { padding: var(--space-5); }
+  .xre05-row { grid-template-columns: minmax(0, 1fr); gap: var(--space-5); }
+  .xre05-row__book { padding-left: 0; border-left: 0; padding-top: var(--space-4); border-top: 1px solid var(--border-subtle); }
+}
