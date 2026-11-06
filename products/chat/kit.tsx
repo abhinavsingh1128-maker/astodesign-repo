@@ -2,8 +2,8 @@
 import { useEffect, useRef, useState } from 'react';
 import type { ReactNode, RefObject } from 'react';
 import { Button, Input, Tag, Toolbar, Mention, Message, Card, Rail, RailSection, RailItem, Avatar } from '../../design-system/components';
-import { CONVS, ME, NOW } from './00-parity-channel/data';
-import type { Conv, File, Msg } from './00-parity-channel/data';
+import { CONVS, ME, NOW } from './x-parity-channel/data';
+import type { Conv, File, Msg } from './x-parity-channel/data';
 import './kit.css';
 
 export { CONVS, ME, NOW };
