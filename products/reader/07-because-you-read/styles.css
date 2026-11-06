@@ -1,0 +1,25 @@
+/* Reader 07: because you read. Prefix .xre07-, tokens only. */
+.xre07-head { display: flex; justify-content: space-between; align-items: end; gap: var(--space-8); flex-wrap: wrap; }
+.xre07-head__top { display: flex; flex-direction: column; gap: var(--space-2); align-items: flex-start; max-width: 320px; }
+.xre07-rows { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+.xre07-row { display: grid; grid-template-columns: 200px minmax(0, 1fr); gap: var(--space-8); padding-block: var(--space-8); border-top: 1px solid var(--border-subtle); }
+.xre07-row:first-child { border-top: 0; padding-top: 0; }
+.xre07-from { display: flex; flex-direction: column; gap: var(--space-2); align-items: flex-start; }
+.xre07-from .ds-cover { --w: 96px; }
+.xre07-from .ds-cover__byline { display: none; }
+.xre07-from__label { color: var(--text-muted); }
+.xre07-from__line { margin: 0; font-style: italic; }
+.xre07-recs { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--space-4); }
+.xre07-recs > li { display: flex; }
+.xre07-rec { flex: 1; display: flex; flex-direction: column; gap: var(--space-3); padding: var(--space-4); background-color: var(--bg-raised); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); box-shadow: var(--elevation-1); }
+.xre07-rec__quote { margin: 0; flex: 1; }
+.xre07-rec__quote p { margin: 0; font-size: var(--type-body-l-size); line-height: 1.5; }
+.xre07-rec__book { display: flex; flex-direction: column; gap: var(--space-2); align-items: flex-start; padding-top: var(--space-3); border-top: 1px solid var(--border-subtle); }
+.xre07-rec__book .ds-cover { --w: 88px; }
+.xre07-rec__book .ds-cover__byline { display: none; }
+.xre07-rec__meta { min-width: 0; overflow-wrap: anywhere; }
+.xre07-rec__title { margin: 0; font-family: var(--font-serif); font-size: var(--type-heading-4-size); font-weight: 600; line-height: 1.2; }
+.xre07-rec .ds-btn { align-self: flex-start; }
+@media (max-width: 1200px) { .xre07-recs { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 900px) { .xre07-row { grid-template-columns: minmax(0, 1fr); gap: var(--space-5); } }
+@media (max-width: 560px) { .xre07-recs { grid-template-columns: minmax(0, 1fr); } }
