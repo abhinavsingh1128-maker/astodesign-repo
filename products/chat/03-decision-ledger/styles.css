@@ -15,3 +15,4 @@
 .xch03-root .ds-sheet .ds-modal__head { padding: var(--space-4) var(--space-4) 0; flex: none; }
 .xch03-root .ds-sheet .xck-composer { margin: 0; }
 @media (max-width: 760px) { .xch03-main { padding: var(--space-4); } }
+.xch03-talk__top { display: flex; align-items: center; justify-content: space-between; width: 100%; }

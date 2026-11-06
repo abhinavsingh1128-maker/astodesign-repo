@@ -26,7 +26,7 @@ function Ledger() {
   const [decs, setDecs] = useState(START);
   const [where, setWhere] = useState('all');
   const [who, setWho] = useState<'all' | 'mine'>('all');
-  const [sel, setSel] = useState('d1');
+  const [sel, setSel] = useState<string | null>(null);
   const [sheet, setSheet] = useState(false);
   const [recording, setRecording] = useState(false);
   const [answer, setAnswer] = useState('');
@@ -37,7 +37,7 @@ function Ledger() {
   const closeRec = useCallback(() => setRecording(false), []);
   const shown = decs.filter((d) => (where === 'all' || d.conv === where) && (who === 'all' || d.owner === ME));
   const open = shown.filter((d) => !d.answer), done = shown.filter((d) => d.answer);
-  const d = decs.find((x) => x.id === sel)!;
+  const d = decs.find((x) => x.id === sel);
   const pick = (id: string) => { setSel(id); if (narrow) setSheet(true); };
   const record = () => {
     if (!answer.trim()) return;
@@ -54,10 +54,10 @@ function Ledger() {
       </button>
     </li>
   );
-  const talk = (
+  const talk = d && (
     <div className="xch03-talk">
       <div className="xch03-talk__head">
-        <p className="ds-kicker">{title(conv(d.conv))}</p>
+        <div className="xch03-talk__top"><p className="ds-kicker">{title(conv(d.conv))}</p><Button variant="ghost" size="sm" onClick={() => setSel(null)}>Close</Button></div>
         <h2 className="ds-h4">{d.q}</h2>
         {d.answer ? <p className="xch03-talk__a"><Tag variant="selected">Decided</Tag> {d.answer}</p> : <Button variant="secondary" size="sm" onClick={() => setRecording(true)}>Record decision</Button>}
       </div>
@@ -65,7 +65,7 @@ function Ledger() {
         <StreamDivider>The talk behind it</StreamDivider>
         <Talk list={[rootOf(d), ...(rootOf(d).replies ?? []), ...(extra[d.root] ?? [])]} />
       </div>
-      <Composer placeholder="Add to this decision" primary={narrow || true} onSend={(t) => setExtra((x) => ({ ...x, [d.root]: [...(x[d.root] ?? []), mine(t)] }))} />
+      <Composer placeholder="Add to this decision" primary={narrow || true} onSend={(t, f) => setExtra((x) => ({ ...x, [d.root]: [...(x[d.root] ?? []), mine(t, f)] }))} />
     </div>
   );
   const opens = (id: string) => decs.filter((x) => x.conv === id && !x.answer).length;
@@ -74,16 +74,16 @@ function Ledger() {
       <AppShell
         sidebar={<ChatRail current={where} onPick={setWhere} counts={(c) => opens(c.id)} top={<RailSection title="Ledger"><RailItem label="All decisions" current={where === 'all'} count={decs.filter((x) => !x.answer).length} unread onClick={() => setWhere('all')} /></RailSection>} />}
         header={<><div><p className="ds-kicker">{where === 'all' ? 'Across the workspace' : conv(where).topic}</p><h1 className="ds-h4">{where === 'all' ? 'Decision ledger' : title(conv(where))}</h1></div><span className="ds-spacer" /><Segmented label="Owner" value={who} onChange={setWho} options={[{ value: 'all', label: 'Everyone' }, { value: 'mine', label: 'Mine' }]} /></>}
-        aside={narrow ? undefined : talk}>
+        aside={narrow || !d ? undefined : talk}>
         <div className="xch03-main">
           {shown.length === 0 && <EmptyState title="Nothing decided here yet" body="Decisions land here when someone records one." action={<Button variant="secondary" size="sm" onClick={() => { setWhere('all'); setWho('all'); }}>Show all decisions</Button>} />}
           {open.length > 0 && <section><p className="ds-kicker">Waiting on someone</p><h2 className="ds-h3">Still open <span className="xch03-n">{open.length}</span></h2><ul className="xch03-list">{open.map(row)}</ul></section>}
           {done.length > 0 && <section><p className="ds-kicker">On the record</p><h2 className="ds-h3">Decided <span className="xch03-n">{done.length}</span></h2><ul className="xch03-list">{done.map(row)}</ul></section>}
         </div>
       </AppShell>
-      {narrow && <Modal open={sheet} onClose={closeSheet} variant="sheet" title="The decision">{talk}</Modal>}
+      {narrow && d && <Modal open={sheet} onClose={closeSheet} variant="sheet" title="The decision">{talk}</Modal>}
       <Modal open={recording} onClose={closeRec} title="Record the decision" actions={<><Button variant="ghost" onClick={closeRec}>Cancel</Button><Button variant="primary" disabled={!answer.trim()} onClick={record}>Save</Button></>}>
-        <p className="ds-caption">{d.q}</p>
+        <p className="ds-caption">{d?.q}</p>
         <Input compact multiline rows={3} label="What was decided" value={answer} onChange={(e) => setAnswer(e.target.value)} />
       </Modal>
       {toast && <Toast onDone={clear} action={toast.undo && <Button variant="ghost" size="sm" onClick={toast.undo}>Undo</Button>}>{toast.t}</Toast>}

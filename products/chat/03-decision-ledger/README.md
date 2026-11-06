@@ -8,7 +8,7 @@
 
 **Mode:** VARIANT of the team chat archetype. One axis changed: the main object is a decision, not a message.
 
-**Shape:** AppShell with a channel rail, Paper ledger of open and decided questions, talk and composer in the aside or a sheet.
+**Shape:** AppShell with a channel rail, Paper ledger of open and decided questions, and the talk, composer and attachments open in the aside or a sheet only after you click a decision.
 
 ## Anatomy
 
